@@ -42,6 +42,14 @@ docker compose logs -f minecraft
 docker compose logs -f backup
 ```
 
+## サーバーコマンド実行（Makefile）
+
+```bash
+make mc-cmd CMD="list"
+make mc-cmd CMD="say hello from make"
+make mc-shell
+```
+
 バックアップファイルは `backups/` 配下に `minecraft-world_YYYYmmdd_HHMMSS.tgz` 形式で生成されます。
 
 サンプルデータパック:
