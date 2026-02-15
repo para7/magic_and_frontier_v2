@@ -1,11 +1,13 @@
 # Minecraft Server on Docker
 
 既存の `server_1_21_11.jar` を使って Minecraft サーバーを起動し、ワールドデータをバインドマウントで保持します。  
+データパックは `./datapacks` を `world/datapacks` にマウントして管理します。  
 バックアップは 24 時間ごとに `tgz` を作成し、デフォルトで最新 7 世代を保持します。
 
 ## 構成
 
 - サーバーデータ: `./data`
+- データパック: `./datapacks`
 - バックアップ: `./backups`
 - サーバーJAR: `./server_1_21_11.jar`
 
@@ -13,7 +15,7 @@
 
 ```bash
 cp .env.example .env
-mkdir -p data backups
+mkdir -p data backups datapacks
 ```
 
 `.env` の `RCON_PASSWORD` は必ず変更してください。
@@ -41,6 +43,20 @@ docker compose logs -f backup
 ```
 
 バックアップファイルは `backups/` 配下に `minecraft-world_YYYYmmdd_HHMMSS.tgz` 形式で生成されます。
+
+サンプルデータパック:
+
+- `datapacks/sample_pack` を同梱しています。
+- サーバー起動時または `/reload` 実行時に `say sample_pack_loaded` を実行する最小構成です。
+
+データパックの動作確認:
+
+```bash
+docker compose restart minecraft
+rg 'Found new data pack file/sample_pack|sample_pack_loaded' data/logs/latest.log
+```
+
+`Found new data pack file/sample_pack` または `sample_pack_loaded` が表示されれば、`./datapacks` のマウント経由でデータパックが読み込まれています。
 
 ## 主要な環境変数
 
