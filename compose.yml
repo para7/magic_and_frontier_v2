@@ -1,66 +1,66 @@
 services:
-  minecraft:
-    image: eclipse-temurin:21-jre
-    container_name: minecraft
-    restart: unless-stopped
-    working_dir: /mc/data
-    command:
-      - /bin/sh
-      - -ec
-      - |
-        [ -n "$${RCON_PASSWORD:-}" ] || { echo "RCON_PASSWORD is required"; exit 1; }
-        touch server.properties
-        set_prop() {
-          key="$$1"
-          value="$$2"
-          if grep -q "^$${key}=" server.properties; then
-            sed -i "s|^$${key}=.*|$${key}=$${value}|" server.properties
-          else
-            printf "%s=%s\n" "$$key" "$$value" >> server.properties
-          fi
-        }
-        set_prop enable-rcon true
-        set_prop rcon.port "$${RCON_PORT:-25575}"
-        set_prop rcon.password "$${RCON_PASSWORD}"
-        exec java -Xms"$${MC_XMS:-1G}" -Xmx"$${MC_XMX:-2G}" -jar /mc/server.jar nogui
-    environment:
-      TZ: ${TZ:-Asia/Tokyo}
-      RCON_PORT: ${RCON_PORT:-25575}
-      RCON_PASSWORD: ${RCON_PASSWORD:-change-me}
-      MC_XMS: ${MC_XMS:-1G}
-      MC_XMX: ${MC_XMX:-2G}
-    ports:
-      - "25565:25565/tcp"
-      - "25565:25565/udp"
-    volumes:
-      - ./server_1_21_11.jar:/mc/server.jar:ro
-      - ./data:/mc/data
-      - ./datapacks:/mc/data/world/datapacks
+    minecraft:
+        image: eclipse-temurin:21-jre
+        container_name: minecraft
+        restart: unless-stopped
+        working_dir: /mc/data
+        command:
+            - /bin/sh
+            - -ec
+            - |
+                [ -n "$${RCON_PASSWORD:-}" ] || { echo "RCON_PASSWORD is required"; exit 1; }
+                touch server.properties
+                set_prop() {
+                  key="$$1"
+                  value="$$2"
+                  if grep -q "^$${key}=" server.properties; then
+                    sed -i "s|^$${key}=.*|$${key}=$${value}|" server.properties
+                  else
+                    printf "%s=%s\n" "$$key" "$$value" >> server.properties
+                  fi
+                }
+                set_prop enable-rcon true
+                set_prop rcon.port "$${RCON_PORT:-25575}"
+                set_prop rcon.password "$${RCON_PASSWORD}"
+                exec java -Xms"$${MC_XMS:-1G}" -Xmx"$${MC_XMX:-2G}" -jar /mc/server.jar nogui
+        environment:
+            TZ: ${TZ:-Asia/Tokyo}
+            RCON_PORT: ${RCON_PORT:-25575}
+            RCON_PASSWORD: ${RCON_PASSWORD:-change-me}
+            MC_XMS: ${MC_XMS:-1G}
+            MC_XMX: ${MC_XMX:-4G}
+        ports:
+            - "25565:25565/tcp"
+            - "25565:25565/udp"
+        volumes:
+            - ./server_1_21_11.jar:/mc/server.jar:ro
+            - ./data:/mc/data
+            - ./datapacks:/mc/data/world/datapacks
 
-  backup:
-    image: alpine:3.20
-    container_name: minecraft-backup
-    restart: unless-stopped
-    depends_on:
-      - minecraft
-    environment:
-      TZ: ${TZ:-Asia/Tokyo}
-      RCON_HOST: minecraft
-      RCON_PORT: ${RCON_PORT:-25575}
-      RCON_PASSWORD: ${RCON_PASSWORD:-change-me}
-      BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS:-24}
-      BACKUP_RETENTION: ${BACKUP_RETENTION:-7}
-      BACKUP_PREFIX: ${BACKUP_PREFIX:-minecraft-world}
-      BACKUP_DIR: /backups
-      DATA_DIR: /data
-      STARTUP_DELAY_SECONDS: ${STARTUP_DELAY_SECONDS:-120}
-    command:
-      - /bin/sh
-      - -ec
-      - |
-        apk add --no-cache bash coreutils tar gzip mcrcon tzdata >/dev/null
-        exec /backup.sh
-    volumes:
-      - ./data:/data:ro
-      - ./backups:/backups
-      - ./backup/backup.sh:/backup.sh:ro
+    backup:
+        image: alpine:3.20
+        container_name: minecraft-backup
+        restart: unless-stopped
+        depends_on:
+            - minecraft
+        environment:
+            TZ: ${TZ:-Asia/Tokyo}
+            RCON_HOST: minecraft
+            RCON_PORT: ${RCON_PORT:-25575}
+            RCON_PASSWORD: ${RCON_PASSWORD:-change-me}
+            BACKUP_INTERVAL_HOURS: ${BACKUP_INTERVAL_HOURS:-24}
+            BACKUP_RETENTION: ${BACKUP_RETENTION:-7}
+            BACKUP_PREFIX: ${BACKUP_PREFIX:-minecraft-world}
+            BACKUP_DIR: /backups
+            DATA_DIR: /data
+            STARTUP_DELAY_SECONDS: ${STARTUP_DELAY_SECONDS:-120}
+        command:
+            - /bin/sh
+            - -ec
+            - |
+                apk add --no-cache bash coreutils tar gzip mcrcon tzdata >/dev/null
+                exec /backup.sh
+        volumes:
+            - ./data:/data:ro
+            - ./backups:/backups
+            - ./backup/backup.sh:/backup.sh:ro
