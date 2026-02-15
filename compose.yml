@@ -38,7 +38,7 @@ services:
             - ./datapacks:/mc/data/world/datapacks
 
     backup:
-        image: alpine:3.20
+        image: ubuntu:24.04
         container_name: minecraft-backup
         restart: unless-stopped
         depends_on:
@@ -58,7 +58,10 @@ services:
             - /bin/sh
             - -ec
             - |
-                apk add --no-cache bash coreutils tar gzip mcrcon tzdata >/dev/null
+                export DEBIAN_FRONTEND=noninteractive
+                apt-get update >/dev/null
+                apt-get install -y --no-install-recommends bash coreutils tar gzip rcon tzdata >/dev/null
+                rm -rf /var/lib/apt/lists/*
                 exec /backup.sh
         volumes:
             - ./data:/data:ro

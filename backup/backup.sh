@@ -16,7 +16,7 @@ log() {
 }
 
 rcon() {
-  mcrcon -H "$RCON_HOST" -P "$RCON_PORT" -p "$RCON_PASSWORD" "$@"
+  rconclt "${RCON_PASSWORD}@${RCON_HOST}:${RCON_PORT}" "$@"
 }
 
 wait_for_rcon() {
