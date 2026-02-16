@@ -4,12 +4,10 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "strict": true,
-    "verbatimModuleSyntax": true,
     "skipLibCheck": true,
-    "types": [
-      "node"
-    ],
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "jsxImportSource": "hono/jsx",
+    "types": ["vite/client"]
   },
-  "exclude": ["node_modules", "dist"]
+  "include": ["app", "vite.config.ts"]
 }

@@ -1,7 +1,7 @@
-import '@hono/react-renderer'
+import type {} from 'hono'
 
-declare module '@hono/react-renderer' {
-  interface Props {
-    title?: string
+declare module 'hono' {
+  interface ContextRenderer {
+    (content: string | Promise<string>): Response | Promise<Response>
   }
 }
