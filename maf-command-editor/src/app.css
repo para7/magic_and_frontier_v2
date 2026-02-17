@@ -2,6 +2,70 @@ main.container {
   padding-block: 2rem;
 }
 
+.list-header {
+  align-items: center;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.item-list {
+  list-style: none;
+  margin: 1.5rem 0;
+  padding: 0;
+}
+
+.item-row {
+  align-items: center;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  padding: 0.9rem 0;
+}
+
+.item-main {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.item-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.item-actions form {
+  margin: 0;
+}
+
+.editor-dialog {
+  border: 0;
+  max-width: 38rem;
+  width: calc(100vw - 2rem);
+}
+
+.editor-dialog article {
+  margin: 0;
+}
+
+.checkbox-label {
+  align-items: center;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.validation-error {
+  display: block;
+  margin-top: -0.4rem;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
 .status-ok {
   color: var(--pico-color-green-500);
 }

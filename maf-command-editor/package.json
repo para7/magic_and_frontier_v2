@@ -15,6 +15,7 @@
     "seroval": "^1.5.0",
     "seroval-plugins": "^1.5.0",
     "solid-js": "^1.9.5",
+    "valibot": "^1.2.0",
     "vinxi": "^0.5.7"
   },
   "engines": {
