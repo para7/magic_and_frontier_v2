@@ -3,3 +3,4 @@ data/
 backups/
 *:Zone.Identifier
 *.jar
+tmp
