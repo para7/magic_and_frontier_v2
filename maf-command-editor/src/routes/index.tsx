@@ -65,59 +65,67 @@ export default function Home() {
   const submission = useSubmission(saveFormState);
 
   return (
-    <main class="page">
+    <main class="container">
       <Title>Form Sample</Title>
-      <h1>Form Sample</h1>
-      <p class="lead">Values are loaded from and saved to /tmp/form-state.json.</p>
+      <article>
+        <h1>Form Sample</h1>
+        <p>Values are loaded from and saved to /tmp/form-state.json.</p>
 
-      <form class="sample-form" action={saveFormState} method="post">
-        <label for="title">Title</label>
-        <input
-          id="title"
-          name="title"
-          type="text"
-          value={initialState()?.title ?? ""}
-          placeholder="Enter title"
-        />
+        <form action={saveFormState} method="post">
+          <label for="title">
+            Title
+            <input
+              id="title"
+              name="title"
+              type="text"
+              value={initialState()?.title ?? ""}
+              placeholder="Enter title"
+            />
+          </label>
 
-        <label for="description">Description</label>
-        <textarea
-          id="description"
-          name="description"
-          rows="4"
-          placeholder="Enter description"
-        >
-          {initialState()?.description ?? ""}
-        </textarea>
+          <label for="description">
+            Description
+            <textarea
+              id="description"
+              name="description"
+              rows="4"
+              placeholder="Enter description"
+            >
+              {initialState()?.description ?? ""}
+            </textarea>
+          </label>
 
-        <label class="checkbox-row" for="enabled">
-          <input
-            id="enabled"
-            name="enabled"
-            type="checkbox"
-            checked={initialState()?.enabled ?? false}
-          />
-          Enabled
-        </label>
+          <fieldset>
+            <label for="enabled">
+              <input
+                id="enabled"
+                name="enabled"
+                type="checkbox"
+                checked={initialState()?.enabled ?? false}
+              />
+              Enabled
+            </label>
+          </fieldset>
 
-        <button type="submit" disabled={submission.pending}>
-          {submission.pending ? "Saving..." : "Save"}
-        </button>
-      </form>
+          <button type="submit" disabled={submission.pending} aria-busy={submission.pending}>
+            {submission.pending ? "Saving..." : "Save"}
+          </button>
+        </form>
 
-      <Show when={submission.result && !submission.pending}>
-        <p class="status ok">
-          Saved at {(submission.result as FormState).updatedAt || "unknown time"}.
-        </p>
-      </Show>
+        <Show when={submission.result && !submission.pending}>
+          <p class="status-ok">
+            Saved at {(submission.result as FormState).updatedAt || "unknown time"}.
+          </p>
+        </Show>
 
-      <Show when={submission.error && !submission.pending}>
-        <p class="status error">Failed to save. Please check server logs.</p>
-      </Show>
+        <Show when={submission.error && !submission.pending}>
+          <p class="status-error">Failed to save. Please check server logs.</p>
+        </Show>
 
-      <Show when={initialState()?.updatedAt}>
-        <p class="last-saved">Last saved: {initialState()?.updatedAt}</p>
-      </Show>
+        <Show when={initialState()?.updatedAt}>
+          <small>Last saved: {initialState()?.updatedAt}</small>
+        </Show>
+      </article>
     </main>
   );
 }
