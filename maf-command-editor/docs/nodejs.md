@@ -1,0 +1,1 @@
+- This project uses bunjs only. You can't use nodejs.
