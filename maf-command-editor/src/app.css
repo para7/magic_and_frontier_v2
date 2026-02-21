@@ -1,87 +1,160 @@
+.app-shell {
+	min-height: 100vh;
+}
+
+.site-header {
+	align-items: center;
+	border-bottom: 1px solid var(--pico-muted-border-color);
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-start;
+	padding: 0.75rem 1rem;
+}
+
+.hamburger-menu {
+	flex: 0 0 auto;
+	position: relative;
+}
+
+.hamburger-menu > summary {
+	align-items: center;
+	border: 1px solid var(--pico-muted-border-color);
+	border-radius: 0.4rem;
+	cursor: pointer;
+	display: inline-flex;
+	justify-content: center;
+	list-style: none;
+	min-height: 2.25rem;
+	min-width: 2.25rem;
+	padding: 0.25rem;
+}
+
+.hamburger-menu > summary::-webkit-details-marker {
+	display: none;
+}
+
+.hamburger-icon {
+	font-size: 1.2rem;
+	line-height: 1;
+}
+
+.site-nav {
+	background: var(--pico-background-color);
+	border: 1px solid var(--pico-muted-border-color);
+	border-radius: 0.4rem;
+	box-shadow: 0 8px 24px rgb(0 0 0 / 14%);
+	display: grid;
+	gap: 0.25rem;
+	margin-top: 0.4rem;
+	min-width: 8rem;
+	padding: 0.6rem;
+	position: absolute;
+	left: 0;
+	z-index: 10;
+}
+
+.site-nav a {
+	border-radius: 0.25rem;
+	padding: 0.25rem 0.4rem;
+	text-decoration: none;
+}
+
+.site-nav a:hover {
+	background: var(--pico-muted-border-color);
+}
+
+.site-title {
+	font-size: 1.1rem;
+	font-weight: 700;
+	margin: 0;
+}
+
 main.container {
-  padding-block: 2rem;
+	padding-block: 2rem;
 }
 
 .list-header {
-  align-items: center;
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
+	align-items: center;
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
 }
 
 .item-list {
-  list-style: none;
-  margin: 1.5rem 0;
-  padding: 0;
+	list-style: none;
+	margin: 1.5rem 0;
+	padding: 0;
 }
 
 .item-row {
-  align-items: flex-start;
-  border-bottom: 1px solid var(--pico-muted-border-color);
-  display: flex;
-  gap: 1rem;
-  justify-content: space-between;
-  padding: 0.9rem 0;
+	align-items: flex-start;
+	border-bottom: 1px solid var(--pico-muted-border-color);
+	display: flex;
+	gap: 1rem;
+	justify-content: space-between;
+	padding: 0.9rem 0;
 }
 
 .item-main {
-  display: grid;
-  gap: 0.35rem;
-  min-width: 0;
+	display: grid;
+	gap: 0.35rem;
+	min-width: 0;
 }
 
 .item-actions {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
 }
 
 .item-actions form {
-  margin: 0;
+	margin: 0;
 }
 
 .editor-dialog {
-  border: 0;
-  max-width: 46rem;
-  width: calc(100vw - 2rem);
+	border: 0;
+	max-width: 46rem;
+	width: calc(100vw - 2rem);
 }
 
 .editor-dialog article {
-  margin: 0;
+	margin: 0;
 }
 
 .checkbox-label {
-  align-items: center;
-  display: flex;
-  gap: 0.5rem;
+	align-items: center;
+	display: flex;
+	gap: 0.5rem;
 }
 
 .validation-error {
-  display: block;
-  margin-top: -0.4rem;
+	display: block;
+	margin-top: -0.4rem;
 }
 
 .modal-actions {
-  display: flex;
-  gap: 0.75rem;
-  justify-content: flex-end;
+	display: flex;
+	gap: 0.75rem;
+	justify-content: flex-end;
 }
 
 .status-ok {
-  color: var(--pico-color-green-500);
+	color: var(--pico-color-green-500);
 }
 
 .status-error {
-  color: var(--pico-color-red-500);
+	color: var(--pico-color-red-500);
 }
 
 .nbt-preview {
-  display: block;
-  max-width: min(74vw, 42rem);
-  overflow-wrap: anywhere;
-  white-space: normal;
+	display: block;
+	max-width: min(74vw, 42rem);
+	overflow-wrap: anywhere;
+	white-space: normal;
 }
 
 .nbt-output {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+	font-family:
+		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+		"Courier New", monospace;
 }

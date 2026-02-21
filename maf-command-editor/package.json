@@ -1,24 +1,31 @@
 {
-  "name": "example-basic",
-  "type": "module",
-  "scripts": {
-    "dev": "vinxi dev",
-    "build": "vinxi build",
-    "package": "bun run build && mkdir -p dist && for pkg in pathe seroval seroval-plugins solid-js vinxi; do rm -rf .output/server/node_modules/$pkg && ln -s ../../../node_modules/$pkg .output/server/node_modules/$pkg; done && bun build --compile --outfile dist/app .output/server/index.mjs",
-    "start": "vinxi start",
-    "version": "vinxi version"
-  },
-  "dependencies": {
-    "@solidjs/meta": "^0.29.4",
-    "@solidjs/router": "^0.15.0",
-    "@solidjs/start": "^1.1.0",
-    "seroval": "^1.5.0",
-    "seroval-plugins": "^1.5.0",
-    "solid-js": "^1.9.5",
-    "valibot": "^1.2.0",
-    "vinxi": "^0.5.7"
-  },
-  "engines": {
-    "bun": ">=1.0.0"
-  }
+	"name": "maf-command-editor",
+	"type": "module",
+	"scripts": {
+		"dev": "bun run --bun vinxi dev",
+		"build": "bun run --bun vinxi build",
+		"typecheck": "bun run --bun tsc --noEmit",
+		"lint": "bun run --bun biome lint .",
+		"format": "bun run --bun biome check --write .",
+		"package": "bun run --bun build && mkdir -p dist && for pkg in pathe seroval seroval-plugins solid-js vinxi; do rm -rf .output/server/node_modules/$pkg && ln -s ../../../node_modules/$pkg .output/server/node_modules/$pkg; done && bun build --compile --outfile dist/app .output/server/index.mjs",
+		"start": "bun run --bun vinxi start",
+		"version": "bun run --bun vinxi version"
+	},
+	"dependencies": {
+		"@solidjs/meta": "^0.29.4",
+		"@solidjs/router": "^0.15.0",
+		"@solidjs/start": "^1.1.0",
+		"seroval": "^1.5.0",
+		"seroval-plugins": "^1.5.0",
+		"solid-js": "^1.9.5",
+		"valibot": "^1.2.0",
+		"vinxi": "^0.5.7"
+	},
+	"engines": {
+		"bun": ">=1.0.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.4.4",
+		"typescript": "^5.9.3"
+	}
 }
