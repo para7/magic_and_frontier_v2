@@ -24,6 +24,20 @@ bun run dev
 bun run dev -- --open
 ```
 
+## Configuration
+
+This app loads storage settings from `config.json`.
+
+```json
+{
+  "storage": {
+    "itemStatePath": "/tmp/form-state.json"
+  }
+}
+```
+
+Update `storage.itemStatePath` to change where item state JSON is saved.
+
 ## Building
 
 Solid apps are built with _presets_, which optimise your project for deployment to different environments.

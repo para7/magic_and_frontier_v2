@@ -80,6 +80,14 @@ main.container {
 	justify-content: space-between;
 }
 
+.header-actions {
+	align-items: center;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	justify-content: flex-end;
+}
+
 .item-list {
 	list-style: none;
 	margin: 1.5rem 0;
@@ -146,6 +154,10 @@ main.container {
 	color: var(--pico-color-red-500);
 }
 
+.status-warn {
+	color: var(--pico-color-amber-500);
+}
+
 .nbt-preview {
 	display: block;
 	max-width: min(74vw, 42rem);
@@ -157,4 +169,34 @@ main.container {
 	font-family:
 		ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
 		"Courier New", monospace;
+}
+
+.spellbook-table-wrap {
+	overflow-x: auto;
+}
+
+.spellbook-table {
+	width: 100%;
+}
+
+.spellbook-table td,
+.spellbook-table th {
+	vertical-align: top;
+	white-space: nowrap;
+}
+
+.spellbook-table td:nth-child(6),
+.spellbook-table th:nth-child(6) {
+	max-width: 28rem;
+	overflow-wrap: anywhere;
+	white-space: normal;
+}
+
+.table-actions {
+	display: flex;
+	gap: 0.4rem;
+}
+
+.table-actions form {
+	margin: 0;
 }

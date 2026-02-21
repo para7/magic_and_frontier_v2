@@ -1,4 +1,6 @@
 import { buildItemNbt } from "~/features/items/nbt";
+import { mkdir } from "node:fs/promises";
+import { dirname } from "node:path";
 import {
 	defaultItemState,
 	type ItemEntry,
@@ -126,7 +128,17 @@ export function createItemStateRepository(
 			}
 		},
 		async saveItemState(state: ItemState): Promise<void> {
-			await Bun.write(formStatePath, JSON.stringify(state, null, 2));
+			try {
+				await mkdir(dirname(formStatePath), { recursive: true });
+				await Bun.write(formStatePath, JSON.stringify(state, null, 2));
+			} catch (error) {
+				if (error instanceof Error) {
+					console.warn(
+						`Failed to save item state to ${formStatePath}: ${error.message}`,
+					);
+				}
+				throw error;
+			}
 		},
 	};
 }

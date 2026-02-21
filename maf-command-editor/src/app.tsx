@@ -19,7 +19,9 @@ export default function App() {
 									</span>
 								</summary>
 								<nav class="site-nav">
+									<A href="/">ホーム</A>
 									<A href="/item">アイテム</A>
+									<A href="/spellbook">魔法書DB</A>
 								</nav>
 							</details>
 							<p class="site-title">MAF Command Editor</p>

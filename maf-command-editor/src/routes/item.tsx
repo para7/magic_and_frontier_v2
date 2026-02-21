@@ -32,7 +32,7 @@ type EditableFields = {
 
 const loadItemState = query(async () => {
 	"use server";
-	const { itemUsecase } = createServerServices();
+	const { itemUsecase } = await createServerServices();
 	return itemUsecase.loadItems();
 }, "load-item-state");
 
@@ -52,7 +52,7 @@ const saveItem = action(async (formData: FormData): Promise<SaveItemResult> => {
 		customNbt: String(formData.get("customNbt") ?? ""),
 	};
 
-	const { itemUsecase } = createServerServices();
+	const { itemUsecase } = await createServerServices();
 	const result = await itemUsecase.saveItem(input);
 	if (result.ok) {
 		await revalidate(loadItemState.key);
@@ -63,7 +63,7 @@ const saveItem = action(async (formData: FormData): Promise<SaveItemResult> => {
 const deleteItem = action(
 	async (formData: FormData): Promise<DeleteItemResult> => {
 		"use server";
-		const { itemUsecase } = createServerServices();
+		const { itemUsecase } = await createServerServices();
 		const result = await itemUsecase.deleteItem({
 			id: String(formData.get("id") ?? ""),
 		});
@@ -193,7 +193,7 @@ export default function Home() {
 						Add Item
 					</button>
 				</header>
-				<p>Items are loaded from and saved to /tmp/form-state.json.</p>
+				<p>Items are loaded from and saved to the path configured in config.json.</p>
 
 				<Show
 					when={(itemState()?.items.length ?? 0) > 0}
