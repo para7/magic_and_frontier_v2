@@ -4,3 +4,8 @@ backups/
 *:Zone.Identifier
 *.jar
 tmp
+tools/node_modules/
+tools/**/node_modules/
+tools/**/dist/
+tools/frontend/.angular/
+tools/frontend/out-tsc/

@@ -1,0 +1,14 @@
+{
+  "name": "maf-tools",
+  "private": true,
+  "packageManager": "pnpm@10.20.0",
+  "devDependencies": {
+    "turbo": "^2.4.4"
+  },
+  "scripts": {
+    "dev": "turbo run dev --parallel --filter=@maf/frontend --filter=@maf/server",
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test"
+  }
+}

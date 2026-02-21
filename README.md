@@ -52,6 +52,22 @@ make mc-shell
 
 バックアップファイルは `backups/` 配下に `minecraft-world_YYYYmmdd_HHMMSS.tgz` 形式で生成されます。
 
+## Command Editor (tools monorepo)
+
+`maf-command-editor` は `tools/` 配下の monorepo に移行しました。
+
+- `tools/domain`: valibot + usecase のドメイン層
+- `tools/server`: hono API 層（JSON 保存ラッパー）
+- `tools/frontend`: Angular UI
+- `tools/cli`: domain 検証用 CLI
+
+```bash
+cd tools
+pnpm install
+pnpm --filter @maf/server dev
+pnpm --filter @maf/frontend dev
+```
+
 サンプルデータパック:
 
 - `datapacks/sample_pack` を同梱しています。
