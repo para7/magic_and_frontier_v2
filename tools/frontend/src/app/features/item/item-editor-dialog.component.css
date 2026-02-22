@@ -8,12 +8,65 @@
   width: 100%;
 }
 
+.enchantments-section {
+  margin-bottom: 12px;
+}
+
+.enchantments-title {
+  margin: 0 0 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.enchantments-accordion {
+  margin-bottom: 10px;
+}
+
+.enchantments-list {
+  display: grid;
+  gap: 8px;
+}
+
+.enchantment-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 140px;
+  align-items: center;
+}
+
+.enchantment-level {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 6px;
+  align-items: center;
+}
+
+.enchantment-level input {
+  width: 70px;
+}
+
+.enchantment-max {
+  color: var(--muted);
+  font-size: 12px;
+}
+
 .status-error {
   color: var(--err);
+}
+
+.status-warn {
+  color: #8a6200;
+  font-size: 12px;
+  margin: 0 0 6px;
 }
 
 @media (max-width: 760px) {
   .form-row {
     grid-template-columns: 1fr;
+  }
+
+  .enchantment-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
   }
 }
