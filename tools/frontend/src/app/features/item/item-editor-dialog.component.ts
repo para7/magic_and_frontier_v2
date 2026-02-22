@@ -6,10 +6,10 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { api } from "../api";
-import { createItemDraft } from "../models/drafts";
-import { itemDraftToSaveInput, itemEntryToDraft } from "../services/editor-mappers";
-import type { SaveErrorResult, ItemEntry } from "../types";
+import { api } from "../../api";
+import { createItemDraft } from "../../models/drafts";
+import { itemDraftToSaveInput, itemEntryToDraft } from "../../services/editor-mappers";
+import type { SaveErrorResult, ItemEntry } from "../../types";
 
 export type ItemEditorDialogData = {
   mode: "create" | "edit";

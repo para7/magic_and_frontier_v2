@@ -1,8 +1,8 @@
 import { CommonModule } from "@angular/common";
 import { Component, signal } from "@angular/core";
 import { AppShellLayoutComponent } from "./layout/app-shell-layout.component";
-import { ItemScreenComponent } from "./screens/item-screen.component";
-import { SpellbookScreenComponent } from "./screens/spellbook-screen.component";
+import { ItemScreenComponent } from "./features/item/item-screen.component";
+import { SpellbookScreenComponent } from "./features/spellbook/spellbook-screen.component";
 import type { AppScreen } from "./types";
 
 @Component({

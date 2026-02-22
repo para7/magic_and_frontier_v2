@@ -4,10 +4,10 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
-import { api } from "../api";
-import { SpellbookEditorDialogComponent } from "../dialogs/spellbook-editor-dialog.component";
-import { StatusMessageComponent } from "../shared/status-message.component";
-import type { SpellbookEntry } from "../types";
+import { api } from "../../api";
+import { SpellbookEditorDialogComponent } from "./spellbook-editor-dialog.component";
+import { StatusMessageComponent } from "../../shared/status-message.component";
+import type { SpellbookEntry } from "../../types";
 
 @Component({
   selector: "app-spellbook-screen",

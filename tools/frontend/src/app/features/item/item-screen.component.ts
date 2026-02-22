@@ -4,10 +4,10 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
-import { api } from "../api";
-import { ItemEditorDialogComponent } from "../dialogs/item-editor-dialog.component";
-import { StatusMessageComponent } from "../shared/status-message.component";
-import type { ItemEntry } from "../types";
+import { api } from "../../api";
+import { ItemEditorDialogComponent } from "./item-editor-dialog.component";
+import { StatusMessageComponent } from "../../shared/status-message.component";
+import type { ItemEntry } from "../../types";
 
 @Component({
   selector: "app-item-screen",
