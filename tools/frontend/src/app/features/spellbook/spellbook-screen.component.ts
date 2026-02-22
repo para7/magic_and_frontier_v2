@@ -13,6 +13,7 @@ import type { SpellbookEntry } from "../../types";
   selector: "app-spellbook-screen",
   standalone: true,
   imports: [CommonModule, MatCardModule, MatButtonModule, StatusMessageComponent],
+  styleUrl: "./spellbook-screen.component.css",
   template: `
     <mat-card appearance="outlined">
       <header class="list-header">

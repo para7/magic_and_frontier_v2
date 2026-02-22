@@ -7,6 +7,7 @@ import type { AppScreen } from "../types";
   selector: "app-shell-layout",
   standalone: true,
   imports: [MatToolbarModule, ScreenSidebarComponent],
+  styleUrl: "./app-shell-layout.component.css",
   template: `
     <div class="app-shell">
       <mat-toolbar class="site-header" role="banner">

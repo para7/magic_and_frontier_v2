@@ -19,6 +19,7 @@ export type ItemEditorDialogData = {
 @Component({
   selector: "app-item-editor-dialog",
   standalone: true,
+  styleUrl: "./item-editor-dialog.component.css",
   imports: [
     CommonModule,
     FormsModule,

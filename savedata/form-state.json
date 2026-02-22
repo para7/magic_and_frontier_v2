@@ -1,0 +1,17 @@
+{
+  "items": [
+    {
+      "id": "3e547d92-9a05-47f0-b9a0-0974e47eac14",
+      "itemId": "minecraft:stone",
+      "count": 1,
+      "customName": "aa",
+      "lore": "a",
+      "enchantments": "",
+      "unbreakable": false,
+      "customModelData": "",
+      "customNbt": "",
+      "nbt": "{id:\"minecraft:stone\",Count:1b,tag:{display:{Name:'{\"text\":\"aa\"}',Lore:['{\"text\":\"a\"}']}}}",
+      "updatedAt": "2026-02-22T09:52:13.525Z"
+    }
+  ]
+}

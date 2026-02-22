@@ -1,0 +1,44 @@
+.site-sidebar {
+  background: linear-gradient(180deg, rgb(18 24 34 / 96%), rgb(14 19 28 / 96%));
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 20px;
+  height: 100%;
+  padding: 20px 14px;
+  width: 220px;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebar-link {
+  justify-content: flex-start;
+  width: 100%;
+}
+
+.active-nav {
+  background: rgb(99 162 255 / 16%);
+}
+
+@media (max-width: 760px) {
+  .site-sidebar {
+    border-bottom: 1px solid var(--line);
+    border-right: none;
+    padding: 14px 12px;
+    width: 100%;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .sidebar-link {
+    width: auto;
+  }
+}

@@ -18,6 +18,7 @@ export type SpellbookEditorDialogData = {
 @Component({
   selector: "app-spellbook-editor-dialog",
   standalone: true,
+  styleUrl: "./spellbook-editor-dialog.component.css",
   imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule],
   template: `
     <h2 mat-dialog-title>{{ mode() === 'edit' ? 'エントリー編集' : 'エントリー追加' }}</h2>

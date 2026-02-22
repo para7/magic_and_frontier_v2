@@ -7,6 +7,7 @@ import type { AppScreen } from "../types";
   selector: "app-screen-sidebar",
   standalone: true,
   imports: [CommonModule, MatButtonModule],
+  styleUrl: "./screen-sidebar.component.css",
   template: `
     <aside class="site-sidebar" aria-label="画面切り替え">
       <nav class="sidebar-nav">

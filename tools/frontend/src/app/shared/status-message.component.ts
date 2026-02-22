@@ -4,6 +4,7 @@ import { Component, Input } from "@angular/core";
 @Component({
   selector: "app-status-message",
   standalone: true,
+  styleUrl: "./status-message.component.css",
   imports: [CommonModule],
   template: `
     <p class="status-error" *ngIf="err">{{ err }}</p>

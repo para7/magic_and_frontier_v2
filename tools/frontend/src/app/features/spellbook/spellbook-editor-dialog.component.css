@@ -1,0 +1,19 @@
+.form-row {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.form-full {
+  width: 100%;
+}
+
+.status-error {
+  color: var(--err);
+}
+
+@media (max-width: 760px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,5 @@
+- Rules: Use BunJS only in this project.
+- Do not use `node`, `npm`, `npx`, `pnpm`, or `yarn` commands.
+- Use `bun run <script>` for all project scripts.
+- Add `tsc` build check as `bun run typecheck` (`tsc --noEmit`).
+- Run `bun run typecheck` and `bun run format` as the final verification step of each task.

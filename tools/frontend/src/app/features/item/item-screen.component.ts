@@ -13,6 +13,7 @@ import type { ItemEntry } from "../../types";
   selector: "app-item-screen",
   standalone: true,
   imports: [CommonModule, MatCardModule, MatButtonModule, StatusMessageComponent],
+  styleUrl: "./item-screen.component.css",
   template: `
     <mat-card appearance="outlined">
       <header class="list-header">

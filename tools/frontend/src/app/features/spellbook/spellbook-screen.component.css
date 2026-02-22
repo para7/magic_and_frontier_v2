@@ -1,0 +1,48 @@
+.list-header {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+}
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.spellbook-table-wrap {
+  overflow-x: auto;
+}
+
+.spellbook-table {
+  border-collapse: collapse;
+  margin-top: 14px;
+  width: 100%;
+}
+
+.spellbook-table td,
+.spellbook-table th {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 8px;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+.spellbook-table td:nth-child(6),
+.spellbook-table th:nth-child(6) {
+  max-width: 460px;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.table-actions {
+  display: flex;
+  gap: 6px;
+}
+
+@media (max-width: 760px) {
+  .table-actions {
+    flex-wrap: wrap;
+  }
+}
