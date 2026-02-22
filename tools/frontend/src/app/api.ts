@@ -2,7 +2,8 @@ import { hc } from "hono/client";
 import type { AppType } from "@maf/server/rpc";
 import type { ItemEntry, SpellbookEntry } from "./types";
 
-const API_BASE = (globalThis as { __MAF_API_BASE__?: string }).__MAF_API_BASE__ ?? "http://localhost:8787";
+const API_BASE =
+  (globalThis as { __MAF_API_BASE__?: string }).__MAF_API_BASE__ ?? "http://localhost:8787";
 const client = hc<AppType>(API_BASE);
 
 async function unwrap<T>(response: Response): Promise<T> {

@@ -29,3 +29,10 @@ pnpm dev
 pnpm typecheck
 pnpm test
 ```
+
+## Lint and format
+
+```bash
+pnpm lint
+pnpm format
+```

@@ -61,7 +61,8 @@ export class ItemScreenComponent {
 
   async openCreateModal(): Promise<void> {
     const ref = this.dialog.open(ItemEditorDialogComponent, {
-      width: "740px",
+      width: "90vw",
+      maxWidth: "90vw",
       data: { mode: "create" as const }
     });
     const result = await firstValueFrom(ref.afterClosed());
@@ -73,7 +74,8 @@ export class ItemScreenComponent {
 
   async openEditModal(item: ItemEntry): Promise<void> {
     const ref = this.dialog.open(ItemEditorDialogComponent, {
-      width: "740px",
+      width: "90vw",
+      maxWidth: "90vw",
       data: { mode: "edit" as const, initial: item }
     });
     const result = await firstValueFrom(ref.afterClosed());

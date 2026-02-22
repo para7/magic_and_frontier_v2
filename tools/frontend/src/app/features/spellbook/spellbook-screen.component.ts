@@ -48,8 +48,12 @@ import type { SpellbookEntry } from "../../types";
               <td>
                 <div class="table-actions">
                   <button mat-button type="button" (click)="openEditModal(entry)">編集</button>
-                  <button mat-stroked-button type="button" (click)="openDuplicateModal(entry)">複製</button>
-                  <button mat-stroked-button type="button" (click)="deleteEntry(entry.id)">削除</button>
+                  <button mat-stroked-button type="button" (click)="openDuplicateModal(entry)">
+                    複製
+                  </button>
+                  <button mat-stroked-button type="button" (click)="deleteEntry(entry.id)">
+                    削除
+                  </button>
                 </div>
               </td>
             </tr>
@@ -82,7 +86,8 @@ export class SpellbookScreenComponent {
 
   async openCreateModal(): Promise<void> {
     const ref = this.dialog.open(SpellbookEditorDialogComponent, {
-      width: "740px",
+      width: "90vw",
+      maxWidth: "90vw",
       data: { mode: "create" as const }
     });
     const result = await firstValueFrom(ref.afterClosed());
@@ -94,7 +99,8 @@ export class SpellbookScreenComponent {
 
   async openEditModal(entry: SpellbookEntry): Promise<void> {
     const ref = this.dialog.open(SpellbookEditorDialogComponent, {
-      width: "740px",
+      width: "90vw",
+      maxWidth: "90vw",
       data: { mode: "edit" as const, initial: entry }
     });
     const result = await firstValueFrom(ref.afterClosed());
@@ -106,7 +112,8 @@ export class SpellbookScreenComponent {
 
   async openDuplicateModal(entry: SpellbookEntry): Promise<void> {
     const ref = this.dialog.open(SpellbookEditorDialogComponent, {
-      width: "740px",
+      width: "90vw",
+      maxWidth: "90vw",
       data: { mode: "duplicate" as const, initial: entry }
     });
     const result = await firstValueFrom(ref.afterClosed());

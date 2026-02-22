@@ -12,6 +12,13 @@
     "typecheck": {
       "dependsOn": ["^typecheck"]
     },
+    "lint": {
+      "dependsOn": ["^lint"],
+      "outputs": []
+    },
+    "format": {
+      "outputs": []
+    },
     "test": {
       "dependsOn": ["^build"],
       "outputs": []

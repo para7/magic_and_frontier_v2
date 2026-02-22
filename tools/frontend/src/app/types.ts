@@ -1,6 +1,6 @@
 export type AppScreen = "item" | "spellbook";
 
-export type ItemEntry = {
+export interface ItemEntry {
   id: string;
   itemId: string;
   count: number;
@@ -12,9 +12,9 @@ export type ItemEntry = {
   customNbt: string;
   nbt: string;
   updatedAt: string;
-};
+}
 
-export type SpellbookEntry = {
+export interface SpellbookEntry {
   id: string;
   castid: number;
   effectid: number;
@@ -23,10 +23,10 @@ export type SpellbookEntry = {
   title: string;
   description: string;
   updatedAt: string;
-};
+}
 
-export type SaveErrorResult = {
+export interface SaveErrorResult {
   ok: false;
   fieldErrors?: Record<string, string>;
   formError?: string;
-};
+}

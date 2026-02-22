@@ -11,10 +11,20 @@ import type { AppScreen } from "../types";
   template: `
     <aside class="site-sidebar" aria-label="画面切り替え">
       <nav class="sidebar-nav">
-        <button mat-button class="sidebar-link" [class.active-nav]="screen === 'item'" (click)="switch.emit('item')">
+        <button
+          mat-button
+          class="sidebar-link"
+          [class.active-nav]="screen === 'item'"
+          (click)="switch.emit('item')"
+        >
           アイテム
         </button>
-        <button mat-button class="sidebar-link" [class.active-nav]="screen === 'spellbook'" (click)="switch.emit('spellbook')">
+        <button
+          mat-button
+          class="sidebar-link"
+          [class.active-nav]="screen === 'spellbook'"
+          (click)="switch.emit('spellbook')"
+        >
           魔法書DB
         </button>
       </nav>

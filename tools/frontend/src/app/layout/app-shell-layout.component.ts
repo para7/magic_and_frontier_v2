@@ -11,7 +11,7 @@ import type { AppScreen } from "../types";
   template: `
     <div class="app-shell">
       <mat-toolbar class="site-header" role="banner">
-        <span class="site-title">MAF コマンドエディター</span>
+        <span class="site-title">MAF Command Editor</span>
       </mat-toolbar>
 
       <div class="app-layout">

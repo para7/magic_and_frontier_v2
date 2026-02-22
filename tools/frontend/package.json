@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "ng serve --host 0.0.0.0 --port 4200",
     "build": "ng build",
+    "lint": "ng lint --fix",
+    "format": "prettier --write \"src/**/*.{ts,html,css,scss}\" \"*.json\" \"angular.json\" \"eslint.config.js\"",
     "typecheck": "tsc -p tsconfig.app.json --noEmit",
     "test": "echo 'no tests'"
   },
@@ -29,6 +31,8 @@
     "@angular/compiler-cli": "^19.2.0",
     "@maf/server": "workspace:*",
     "@types/node": "^24.3.0",
+    "angular-eslint": "^19.8.1",
+    "prettier": "^3.8.1",
     "typescript": "~5.8.2"
   }
 }

@@ -1,4 +1,4 @@
-export type ItemDraft = {
+export interface ItemDraft {
   id: string;
   itemId: string;
   count: string;
@@ -8,9 +8,9 @@ export type ItemDraft = {
   unbreakable: boolean;
   customModelData: string;
   customNbt: string;
-};
+}
 
-export type SpellbookDraft = {
+export interface SpellbookDraft {
   id: string;
   castid: string;
   effectid: string;
@@ -18,7 +18,7 @@ export type SpellbookDraft = {
   cast: string;
   title: string;
   description: string;
-};
+}
 
 export function createItemDraft(): ItemDraft {
   return {

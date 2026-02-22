@@ -23,10 +23,10 @@ import {
   type EnchantmentSelection
 } from "./enchantment-mapper";
 
-export type ItemEditorDialogData = {
+export interface ItemEditorDialogData {
   mode: "create" | "edit";
   initial?: ItemEntry;
-};
+}
 
 @Component({
   selector: "app-item-editor-dialog",
@@ -43,32 +43,30 @@ export type ItemEditorDialogData = {
     MatExpansionModule
   ],
   template: `
-    <h2 mat-dialog-title>{{ mode() === 'edit' ? 'アイテム編集' : 'アイテム追加' }}</h2>
+    <h2 mat-dialog-title>{{ mode() === "edit" ? "アイテム編集" : "アイテム追加" }}</h2>
     <mat-dialog-content>
-      <form id="item-editor-form" (ngSubmit)="save()">
-        <mat-form-field appearance="outline" class="form-full">
+      <form id="item-editor-form" class="form-grid" (ngSubmit)="save()">
+        <mat-form-field appearance="outline" class="form-span-2">
           <mat-label>アイテムID</mat-label>
           <input matInput [(ngModel)]="draft().itemId" name="itemId" />
         </mat-form-field>
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>個数</mat-label>
-            <input matInput [(ngModel)]="draft().count" name="count" type="number" min="1" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>カスタムモデルデータ</mat-label>
-            <input matInput [(ngModel)]="draft().customModelData" name="customModelData" />
-          </mat-form-field>
-        </div>
-        <mat-form-field appearance="outline" class="form-full">
+        <mat-form-field appearance="outline">
+          <mat-label>個数</mat-label>
+          <input matInput [(ngModel)]="draft().count" name="count" type="number" min="1" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>カスタムモデルデータ</mat-label>
+          <input matInput [(ngModel)]="draft().customModelData" name="customModelData" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
           <mat-label>カスタム名</mat-label>
           <input matInput [(ngModel)]="draft().customName" name="customName" />
         </mat-form-field>
-        <mat-form-field appearance="outline" class="form-full">
+        <mat-form-field appearance="outline">
           <mat-label>説明文</mat-label>
-          <textarea matInput [(ngModel)]="draft().lore" name="lore" rows="3"></textarea>
+          <textarea matInput [(ngModel)]="draft().lore" name="lore" rows="2"></textarea>
         </mat-form-field>
-        <section class="enchantments-section">
+        <section class="enchantments-section form-span-2">
           <h3 class="enchantments-title">エンチャント</h3>
           <p class="status-warn" *ngFor="let warning of enchantmentWarnings()">{{ warning }}</p>
           <mat-accordion class="enchantments-accordion" multi>
@@ -77,7 +75,10 @@ export type ItemEditorDialogData = {
                 <mat-panel-title>{{ group.label }}</mat-panel-title>
               </mat-expansion-panel-header>
               <div class="enchantments-list">
-                <div class="enchantment-row" *ngFor="let enchantment of group.enchantments; trackBy: trackByEnchantment">
+                <div
+                  class="enchantment-row"
+                  *ngFor="let enchantment of group.enchantments; trackBy: trackByEnchantment"
+                >
                   <mat-checkbox
                     [ngModel]="isEnabled(enchantment.id)"
                     [name]="'enchant-enabled-' + enchantment.id"
@@ -105,11 +106,13 @@ export type ItemEditorDialogData = {
             </mat-expansion-panel>
           </mat-accordion>
         </section>
-        <mat-form-field appearance="outline" class="form-full">
+        <mat-form-field appearance="outline" class="form-span-2">
           <mat-label>カスタムNBT</mat-label>
           <textarea matInput [(ngModel)]="draft().customNbt" name="customNbt" rows="2"></textarea>
         </mat-form-field>
-        <mat-checkbox [(ngModel)]="draft().unbreakable" name="unbreakable">耐久値を減らさない</mat-checkbox>
+        <mat-checkbox class="form-span-2" [(ngModel)]="draft().unbreakable" name="unbreakable"
+          >耐久値を減らさない</mat-checkbox
+        >
       </form>
       <p class="status-error" *ngIf="error()">{{ error() }}</p>
     </mat-dialog-content>
@@ -124,7 +127,9 @@ export class ItemEditorDialogComponent {
   private readonly dialogRef = inject(MatDialogRef<ItemEditorDialogComponent>);
 
   readonly mode = signal<"create" | "edit">(this.data.mode);
-  readonly draft = signal(this.data.initial ? itemEntryToDraft(this.data.initial) : createItemDraft());
+  readonly draft = signal(
+    this.data.initial ? itemEntryToDraft(this.data.initial) : createItemDraft()
+  );
 
   readonly message = signal<{ err?: string }>({});
   readonly error = computed(() => this.message().err ?? "");
@@ -174,9 +179,7 @@ export class ItemEditorDialogComponent {
   onLevelChange(id: string, value: unknown, maxLevel: number): void {
     const rawText = String(value ?? "").trim();
     const numeric = Number.parseInt(rawText, 10);
-    const normalizedLevel = Number.isInteger(numeric)
-      ? String(clampLevel(numeric, maxLevel))
-      : "";
+    const normalizedLevel = Number.isInteger(numeric) ? String(clampLevel(numeric, maxLevel)) : "";
 
     this.enchantmentSelection.update((selection) => {
       const previous = selection[id] ?? { enabled: false, level: "1" };
@@ -192,7 +195,10 @@ export class ItemEditorDialogComponent {
 
   async save(): Promise<void> {
     this.message.set({});
-    const { text } = serializeEnchantmentsSelection(this.enchantmentSelection(), ENCHANTMENT_CATALOG);
+    const { text } = serializeEnchantmentsSelection(
+      this.enchantmentSelection(),
+      ENCHANTMENT_CATALOG
+    );
     const draft = {
       ...this.draft(),
       enchantments: text
@@ -221,11 +227,11 @@ const ENCHANTMENT_CATEGORY_ORDER: EnchantmentCategoryId[] = [
   "curse"
 ];
 
-type EnchantmentGroup = {
+interface EnchantmentGroup {
   id: EnchantmentCategoryId;
   label: string;
   enchantments: EnchantmentDefinition[];
-};
+}
 
 function buildEnchantmentGroups(): EnchantmentGroup[] {
   return ENCHANTMENT_CATEGORY_ORDER.map((categoryId) => ({

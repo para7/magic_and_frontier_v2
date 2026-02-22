@@ -10,47 +10,55 @@ import { createSpellbookDraft } from "../../models/drafts";
 import { spellbookDraftToSaveInput, spellbookEntryToDraft } from "../../services/editor-mappers";
 import type { SaveErrorResult, SpellbookEntry } from "../../types";
 
-export type SpellbookEditorDialogData = {
+export interface SpellbookEditorDialogData {
   mode: "create" | "edit" | "duplicate";
   initial?: SpellbookEntry;
-};
+}
 
 @Component({
   selector: "app-spellbook-editor-dialog",
   standalone: true,
   styleUrl: "./spellbook-editor-dialog.component.css",
-  imports: [CommonModule, FormsModule, MatDialogModule, MatButtonModule, MatFormFieldModule, MatInputModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule
+  ],
   template: `
-    <h2 mat-dialog-title>{{ mode() === 'edit' ? 'エントリー編集' : 'エントリー追加' }}</h2>
+    <h2 mat-dialog-title>{{ mode() === "edit" ? "エントリー編集" : "エントリー追加" }}</h2>
     <mat-dialog-content>
-      <form id="spellbook-editor-form" (ngSubmit)="save()">
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>castid</mat-label>
-            <input matInput [(ngModel)]="draft().castid" name="castid" type="number" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>effectid</mat-label>
-            <input matInput [(ngModel)]="draft().effectid" name="effectid" type="number" />
-          </mat-form-field>
-        </div>
-        <div class="form-row">
-          <mat-form-field appearance="outline">
-            <mat-label>cost</mat-label>
-            <input matInput [(ngModel)]="draft().cost" name="cost" type="number" />
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>cast</mat-label>
-            <input matInput [(ngModel)]="draft().cast" name="cast" type="number" />
-          </mat-form-field>
-        </div>
-        <mat-form-field appearance="outline" class="form-full">
+      <form id="spellbook-editor-form" class="form-grid" (ngSubmit)="save()">
+        <mat-form-field appearance="outline">
+          <mat-label>castid</mat-label>
+          <input matInput [(ngModel)]="draft().castid" name="castid" type="number" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>effectid</mat-label>
+          <input matInput [(ngModel)]="draft().effectid" name="effectid" type="number" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>cost</mat-label>
+          <input matInput [(ngModel)]="draft().cost" name="cost" type="number" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>cast</mat-label>
+          <input matInput [(ngModel)]="draft().cast" name="cast" type="number" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" class="form-span-2">
           <mat-label>タイトル</mat-label>
           <input matInput [(ngModel)]="draft().title" name="title" />
         </mat-form-field>
-        <mat-form-field appearance="outline" class="form-full">
+        <mat-form-field appearance="outline" class="form-span-2">
           <mat-label>説明</mat-label>
-          <textarea matInput [(ngModel)]="draft().description" name="description" rows="3"></textarea>
+          <textarea
+            matInput
+            [(ngModel)]="draft().description"
+            name="description"
+            rows="2"
+          ></textarea>
         </mat-form-field>
       </form>
       <p class="status-error" *ngIf="error()">{{ error() }}</p>

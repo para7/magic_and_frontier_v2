@@ -35,17 +35,17 @@ h2 {
 .mat-mdc-dialog-title {
   background: rgb(255 255 255 / 2%);
   border-bottom: 1px solid var(--line);
-  padding: 20px 24px 8px !important;
+  padding: 14px 18px 6px !important;
 }
 
 .mat-mdc-dialog-content {
-  padding: 8px 24px 0 !important;
+  padding: 6px 18px 0 !important;
 }
 
 .mat-mdc-dialog-actions {
   background: rgb(255 255 255 / 2%);
   border-top: 1px solid var(--line);
-  padding: 12px 24px 20px !important;
+  padding: 10px 18px 14px !important;
 }
 
 p {
@@ -79,4 +79,19 @@ p {
 
 .mat-mdc-form-field .mdc-text-field__input::placeholder {
   color: #8e9bb5;
+}
+
+.mat-mdc-dialog-content .mat-mdc-form-field {
+  margin-bottom: -0.55em;
+}
+
+.mat-mdc-dialog-content .mat-mdc-text-field-wrapper {
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.mat-mdc-dialog-content .mat-mdc-form-field-infix {
+  min-height: 40px;
+  padding-top: 9px;
+  padding-bottom: 7px;
 }

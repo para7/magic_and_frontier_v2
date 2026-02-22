@@ -8,14 +8,14 @@ export type EnchantmentSelection = Record<
   }
 >;
 
-export type ParseEnchantmentsResult = {
+export interface ParseEnchantmentsResult {
   selection: EnchantmentSelection;
   warnings: string[];
-};
+}
 
-export type SerializeEnchantmentsResult = {
+export interface SerializeEnchantmentsResult {
   text: string;
-};
+}
 
 function clampLevel(level: number, maxLevel: number): number {
   if (level < 1) return 1;

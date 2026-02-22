@@ -10,12 +10,12 @@ export type EnchantmentCategoryId =
   | "general"
   | "curse";
 
-export type EnchantmentDefinition = {
+export interface EnchantmentDefinition {
   id: string;
   label: string;
   maxLevel: number;
   category: EnchantmentCategoryId;
-};
+}
 
 export const ENCHANTMENT_CATEGORY_LABELS: Record<EnchantmentCategoryId, string> = {
   weapon: "武器",
