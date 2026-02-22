@@ -1,3 +1,5 @@
+export type AppScreen = "item" | "spellbook";
+
 export type ItemEntry = {
   id: string;
   itemId: string;
