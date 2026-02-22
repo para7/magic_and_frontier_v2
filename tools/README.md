@@ -7,7 +7,6 @@
 - `@maf/domain`: core domain logic (valibot schemas, usecases, types)
 - `@maf/server`: Hono API server (JSON file adapter)
 - `@maf/frontend`: Angular app (Hono RPC client)
-- `@maf/cli`: utility CLI that executes domain usecases
 
 ## Setup
 

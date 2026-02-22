@@ -2,4 +2,3 @@ packages:
   - domain
   - server
   - frontend
-  - cli

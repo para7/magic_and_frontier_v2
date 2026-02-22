@@ -59,7 +59,6 @@ make mc-shell
 - `tools/domain`: valibot + usecase のドメイン層
 - `tools/server`: hono API 層（JSON 保存ラッパー）
 - `tools/frontend`: Angular UI
-- `tools/cli`: domain 検証用 CLI
 
 ```bash
 cd tools
