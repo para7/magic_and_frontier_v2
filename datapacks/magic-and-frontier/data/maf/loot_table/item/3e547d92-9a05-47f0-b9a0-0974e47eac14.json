@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:generic",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:stone",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 1
+            },
+            {
+              "function": "minecraft:set_custom_data",
+              "tag": "{maf:{item_id:\"minecraft:stone\",source_id:\"3e547d92-9a05-47f0-b9a0-0974e47eac14\",nbt_snapshot:\"{id:\\\"minecraft:stone\\\",Count:1b,tag:{display:{Name:'{\\\"text\\\":\\\"aa\\\"}',Lore:['{\\\"text\\\":\\\"a\\\"}']}}}\"}}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
