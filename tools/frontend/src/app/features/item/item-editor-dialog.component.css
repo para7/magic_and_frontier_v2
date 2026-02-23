@@ -22,16 +22,34 @@
   margin-bottom: 8px;
 }
 
+.enchantments-groups {
+  display: grid;
+  gap: 12px;
+}
+
+.enchantments-group {
+  display: grid;
+  gap: 8px;
+}
+
+.enchantments-group-title {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
 .enchantments-list {
   display: grid;
-  gap: 6px;
+  gap: 8px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .enchantment-row {
   display: grid;
-  gap: 8px;
-  grid-template-columns: 1fr 140px;
-  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
 }
 
 .enchantment-level {
@@ -42,7 +60,7 @@
 }
 
 .enchantment-level input {
-  width: 70px;
+  width: 100%;
 }
 
 .enchantment-max {
@@ -60,6 +78,12 @@
   margin: 0 0 4px;
 }
 
+@media (max-width: 980px) {
+  .enchantments-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 760px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -69,8 +93,7 @@
     grid-column: auto;
   }
 
-  .enchantment-row {
+  .enchantments-list {
     grid-template-columns: 1fr;
-    gap: 6px;
   }
 }

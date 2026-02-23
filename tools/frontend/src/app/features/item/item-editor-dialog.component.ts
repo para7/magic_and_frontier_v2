@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
@@ -11,6 +11,7 @@ import { api } from "../../api";
 import { createItemDraft } from "../../models/drafts";
 import { itemDraftToSaveInput, itemEntryToDraft } from "../../services/editor-mappers";
 import type { SaveErrorResult, ItemEntry } from "../../types";
+import { ToastService } from "../../shared/toast.service";
 import {
   ENCHANTMENT_CATALOG,
   ENCHANTMENT_CATEGORY_LABELS,
@@ -69,39 +70,44 @@ export interface ItemEditorDialogData {
         <section class="enchantments-section form-span-2">
           <h3 class="enchantments-title">エンチャント</h3>
           <p class="status-warn" *ngFor="let warning of enchantmentWarnings()">{{ warning }}</p>
-          <mat-accordion class="enchantments-accordion" multi>
-            <mat-expansion-panel *ngFor="let group of enchantmentGroups; trackBy: trackByGroup">
+          <mat-accordion class="enchantments-accordion">
+            <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title>{{ group.label }}</mat-panel-title>
+                <mat-panel-title>エンチャント一覧</mat-panel-title>
               </mat-expansion-panel-header>
-              <div class="enchantments-list">
-                <div
-                  class="enchantment-row"
-                  *ngFor="let enchantment of group.enchantments; trackBy: trackByEnchantment"
-                >
-                  <mat-checkbox
-                    [ngModel]="isEnabled(enchantment.id)"
-                    [name]="'enchant-enabled-' + enchantment.id"
-                    (ngModelChange)="onToggle(enchantment.id, $event, enchantment.maxLevel)"
-                  >
-                    {{ enchantment.label }}
-                  </mat-checkbox>
-                  <div class="enchantment-level">
-                    <label [for]="'enchant-level-' + enchantment.id">Lv</label>
-                    <input
-                      matInput
-                      type="number"
-                      [id]="'enchant-level-' + enchantment.id"
-                      [name]="'enchant-level-' + enchantment.id"
-                      [min]="1"
-                      [max]="enchantment.maxLevel"
-                      [disabled]="!isEnabled(enchantment.id)"
-                      [ngModel]="getLevel(enchantment.id)"
-                      (ngModelChange)="onLevelChange(enchantment.id, $event, enchantment.maxLevel)"
-                    />
-                    <span class="enchantment-max">/ {{ enchantment.maxLevel }}</span>
+              <div class="enchantments-groups">
+                <section class="enchantments-group" *ngFor="let group of enchantmentGroups; trackBy: trackByGroup">
+                  <h4 class="enchantments-group-title">{{ group.label }}</h4>
+                  <div class="enchantments-list">
+                    <div
+                      class="enchantment-row"
+                      *ngFor="let enchantment of group.enchantments; trackBy: trackByEnchantment"
+                    >
+                      <mat-checkbox
+                        [ngModel]="isEnabled(enchantment.id)"
+                        [name]="'enchant-enabled-' + enchantment.id"
+                        (ngModelChange)="onToggle(enchantment.id, $event, enchantment.maxLevel)"
+                      >
+                        {{ enchantment.label }}
+                      </mat-checkbox>
+                      <div class="enchantment-level">
+                        <label [for]="'enchant-level-' + enchantment.id">Lv</label>
+                        <input
+                          matInput
+                          type="number"
+                          [id]="'enchant-level-' + enchantment.id"
+                          [name]="'enchant-level-' + enchantment.id"
+                          [min]="1"
+                          [max]="enchantment.maxLevel"
+                          [disabled]="!isEnabled(enchantment.id)"
+                          [ngModel]="getLevel(enchantment.id)"
+                          (ngModelChange)="onLevelChange(enchantment.id, $event, enchantment.maxLevel)"
+                        />
+                        <span class="enchantment-max">/ {{ enchantment.maxLevel }}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </section>
               </div>
             </mat-expansion-panel>
           </mat-accordion>
@@ -114,7 +120,6 @@ export interface ItemEditorDialogData {
           >耐久値を減らさない</mat-checkbox
         >
       </form>
-      <p class="status-error" *ngIf="error()">{{ error() }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" (click)="cancel()">キャンセル</button>
@@ -125,14 +130,13 @@ export interface ItemEditorDialogData {
 export class ItemEditorDialogComponent {
   private readonly data = inject<ItemEditorDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<ItemEditorDialogComponent>);
+  private readonly toast = inject(ToastService);
 
   readonly mode = signal<"create" | "edit">(this.data.mode);
   readonly draft = signal(
     this.data.initial ? itemEntryToDraft(this.data.initial) : createItemDraft()
   );
 
-  readonly message = signal<{ err?: string }>({});
-  readonly error = computed(() => this.message().err ?? "");
   readonly enchantmentWarnings = signal<string[]>([]);
   readonly enchantmentSelection = signal<EnchantmentSelection>({});
   readonly enchantmentGroups = buildEnchantmentGroups();
@@ -194,7 +198,6 @@ export class ItemEditorDialogComponent {
   }
 
   async save(): Promise<void> {
-    this.message.set({});
     const { text } = serializeEnchantmentsSelection(
       this.enchantmentSelection(),
       ENCHANTMENT_CATALOG
@@ -209,7 +212,7 @@ export class ItemEditorDialogComponent {
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;
-      this.message.set({ err: result.formError ?? "アイテムの保存に失敗しました。" });
+      this.toast.error(result.formError ?? "アイテムの保存に失敗しました。");
     }
   }
 }
