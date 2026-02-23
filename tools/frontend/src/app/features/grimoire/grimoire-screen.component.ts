@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { GrimoireEditorDialogComponent } from "./grimoire-editor-dialog.component";
 import { ToastService } from "../../shared/toast.service";
 import type { GrimoireEntry } from "../../types";
@@ -28,9 +28,8 @@ import type { GrimoireEntry } from "../../types";
           <thead>
             <tr>
               <th>castid</th>
-              <th>effectid</th>
-              <th>cost</th>
-              <th>cast</th>
+              <th>script</th>
+              <th>詠唱設定</th>
               <th>タイトル</th>
               <th>説明</th>
               <th>操作</th>
@@ -39,9 +38,12 @@ import type { GrimoireEntry } from "../../types";
           <tbody>
             <tr *ngFor="let entry of entries()">
               <td>{{ entry.castid }}</td>
-              <td>{{ entry.effectid }}</td>
-              <td>{{ entry.cost }}</td>
-              <td>{{ entry.cast }}</td>
+              <td>{{ entry.script }}</td>
+              <td>
+                <div *ngFor="let variant of entry.variants">
+                  cast: {{ variant.cast }} / cost: {{ variant.cost }}
+                </div>
+              </td>
               <td>{{ entry.title }}</td>
               <td>{{ entry.description }}</td>
               <td>
@@ -65,6 +67,7 @@ import type { GrimoireEntry } from "../../types";
 export class GrimoireScreenComponent {
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly entries = signal<GrimoireEntry[]>([]);
 
@@ -74,7 +77,7 @@ export class GrimoireScreenComponent {
 
   async reloadEntries(): Promise<void> {
     try {
-      const grimoireState = await api.loadGrimoire();
+      const grimoireState = await this.api.loadGrimoire();
       this.entries.set(grimoireState.entries);
     } catch {
       this.toast.error("grimoireエントリー一覧の読み込みに失敗しました。");
@@ -122,7 +125,7 @@ export class GrimoireScreenComponent {
 
   async deleteEntry(id: string): Promise<void> {
     try {
-      await api.deleteGrimoire(id);
+      await this.api.deleteGrimoire(id);
       this.toast.success("grimoireエントリーを削除しました。");
       await this.reloadEntries();
     } catch {

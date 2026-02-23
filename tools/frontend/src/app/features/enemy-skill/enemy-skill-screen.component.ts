@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { ToastService } from "../../shared/toast.service";
 import type { EnemySkillEntry } from "../../types";
 import { EnemySkillEditorDialogComponent } from "./enemy-skill-editor-dialog.component";
@@ -57,6 +57,7 @@ import { EnemySkillEditorDialogComponent } from "./enemy-skill-editor-dialog.com
 export class EnemySkillScreenComponent {
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly entries = signal<EnemySkillEntry[]>([]);
 
@@ -66,7 +67,7 @@ export class EnemySkillScreenComponent {
 
   async reloadEntries(): Promise<void> {
     try {
-      const state = await api.loadEnemySkills();
+      const state = await this.api.loadEnemySkills();
       this.entries.set(state.entries);
     } catch {
       this.toast.error("enemy_skillエントリー一覧の読み込みに失敗しました。");
@@ -114,7 +115,7 @@ export class EnemySkillScreenComponent {
 
   async deleteEntry(id: string): Promise<void> {
     try {
-      await api.deleteEnemySkill(id);
+      await this.api.deleteEnemySkill(id);
       this.toast.success("enemy_skillエントリーを削除しました。");
       await this.reloadEntries();
     } catch {

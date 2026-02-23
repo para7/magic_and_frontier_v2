@@ -5,7 +5,6 @@ import type {
 } from "../shared/storage.js";
 import { saveGrimoireEntrySchema } from "./schema.js";
 import type {
-	CastIdReassignment,
 	DeleteGrimoireEntryResult,
 	GrimoireEntry,
 	GrimoireFieldErrors,
@@ -22,71 +21,45 @@ export interface GrimoireUsecase {
 	deleteGrimoireEntry(id: string): Promise<DeleteGrimoireEntryResult>;
 }
 
-function toFieldErrors(
-	nested: v.FlatErrors<typeof saveGrimoireEntrySchema>["nested"],
-): GrimoireFieldErrors {
+function toFieldErrors(issues: v.BaseIssue<unknown>[]): GrimoireFieldErrors {
 	const fieldErrors: GrimoireFieldErrors = {};
-	if (!nested) {
+	if (!issues || issues.length === 0) {
 		return fieldErrors;
 	}
 
-	if (nested.castid?.[0]) fieldErrors.castid = nested.castid[0];
-	if (nested.effectid?.[0]) fieldErrors.effectid = nested.effectid[0];
-	if (nested.cost?.[0]) fieldErrors.cost = nested.cost[0];
-	if (nested.cast?.[0]) fieldErrors.cast = nested.cast[0];
-	if (nested.title?.[0]) fieldErrors.title = nested.title[0];
-	if (nested.description?.[0]) fieldErrors.description = nested.description[0];
+	for (const issue of issues) {
+		const path = issue.path?.map((segment) => String(segment.key)).join(".");
+		if (!path) {
+			continue;
+		}
+
+		if (
+			path === "castid" ||
+			path === "script" ||
+			path === "title" ||
+			path === "description" ||
+			path === "variants"
+		) {
+			fieldErrors[path] = issue.message;
+			continue;
+		}
+
+		if (/^variants\.\d+\.(cast|cost)$/.test(path)) {
+			fieldErrors[path as `variants.${number}.cast` | `variants.${number}.cost`] =
+				issue.message;
+			continue;
+		}
+
+		if (path.startsWith("variants.")) {
+			fieldErrors.variants = issue.message;
+		}
+	}
 
 	return fieldErrors;
 }
 
 function sortByCastId(entries: GrimoireEntry[]): GrimoireEntry[] {
-	return [...entries].sort((a, b) => a.castid - b.castid);
-}
-
-function resolveCastIdConflicts(entries: GrimoireEntry[]): {
-	entries: GrimoireEntry[];
-	reassignments: CastIdReassignment[];
-} {
-	const usedCastIds = new Set<number>();
-	let maxCastId = entries.reduce(
-		(currentMax, entry) => Math.max(currentMax, entry.castid),
-		0,
-	);
-
-	const reassignments: CastIdReassignment[] = [];
-	const resolved = entries.map((entry) => {
-		const originalCastId = entry.castid;
-		let nextCastId = originalCastId;
-
-		if (usedCastIds.has(nextCastId)) {
-			do {
-				maxCastId += 1;
-				nextCastId = maxCastId;
-			} while (usedCastIds.has(nextCastId));
-		}
-
-		usedCastIds.add(nextCastId);
-
-		if (nextCastId !== originalCastId) {
-			reassignments.push({
-				id: entry.id,
-				title: entry.title,
-				from: originalCastId,
-				to: nextCastId,
-			});
-		}
-
-		return {
-			...entry,
-			castid: nextCastId,
-		};
-	});
-
-	return {
-		entries: sortByCastId(resolved),
-		reassignments,
-	};
+	return [...entries].sort((a, b) => a.castid - b.castid || a.id.localeCompare(b.id));
 }
 
 export function createGrimoireUsecase(deps: {
@@ -103,16 +76,30 @@ export function createGrimoireUsecase(deps: {
 		): Promise<SaveGrimoireEntryResult> {
 			const parsed = v.safeParse(saveGrimoireEntrySchema, input);
 			if (!parsed.success) {
-				const flat = v.flatten(parsed.issues);
-				return {
-					ok: false,
-					fieldErrors: toFieldErrors(flat.nested),
-					formError: "Validation failed. Fix the highlighted fields.",
-				};
-			}
+			return {
+				ok: false,
+				fieldErrors: toFieldErrors(parsed.issues),
+				formError: "Validation failed. Fix the highlighted fields.",
+			};
+		}
 
 			const state = await deps.grimoireRepository.loadGrimoireState();
 			const now = (deps.now ?? (() => new Date()))().toISOString();
+			const current = state.entries.find((entry) => entry.id === parsed.output.id);
+			const duplicatedCastid = state.entries.find(
+				(entry) =>
+					entry.id !== parsed.output.id && entry.castid === parsed.output.castid,
+			);
+			if (duplicatedCastid) {
+				return {
+					ok: false,
+					fieldErrors: {
+						castid: `castid ${parsed.output.castid} is already used by '${duplicatedCastid.title || duplicatedCastid.id}'.`,
+					},
+					formError: "castid must be unique.",
+				};
+			}
+
 			const nextEntry = {
 				...parsed.output,
 				updatedAt: now,
@@ -130,8 +117,7 @@ export function createGrimoireUsecase(deps: {
 				mutableEntries.push(nextEntry);
 			}
 
-			const { entries: resolvedEntries, reassignments } =
-				resolveCastIdConflicts(mutableEntries);
+			const resolvedEntries = sortByCastId(mutableEntries);
 			await deps.grimoireRepository.saveGrimoireState({
 				entries: resolvedEntries,
 			});
@@ -149,7 +135,15 @@ export function createGrimoireUsecase(deps: {
 				ok: true,
 				entry: saved,
 				mode,
-				reassignments,
+				warnings:
+					current && current.castid !== saved.castid
+						? {
+								castidChanged: {
+									from: current.castid,
+									to: saved.castid,
+								},
+							}
+						: undefined,
 			};
 		},
 		async deleteGrimoireEntry(id: string): Promise<DeleteGrimoireEntryResult> {

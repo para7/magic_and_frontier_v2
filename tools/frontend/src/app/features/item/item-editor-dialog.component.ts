@@ -7,7 +7,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatExpansionModule } from "@angular/material/expansion";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { createItemDraft } from "../../models/drafts";
 import { itemDraftToSaveInput, itemEntryToDraft } from "../../services/editor-mappers";
 import type { SaveErrorResult, ItemEntry } from "../../types";
@@ -131,6 +131,7 @@ export class ItemEditorDialogComponent {
   private readonly data = inject<ItemEditorDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<ItemEditorDialogComponent>);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly mode = signal<"create" | "edit">(this.data.mode);
   readonly draft = signal(
@@ -208,7 +209,7 @@ export class ItemEditorDialogComponent {
     };
     this.draft.set(draft);
     try {
-      await api.saveItem(itemDraftToSaveInput(draft));
+      await this.api.saveItem(itemDraftToSaveInput(draft));
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;

@@ -242,9 +242,8 @@ describe("acceptance scenarios", () => {
 		await grimoireUsecase.saveGrimoireEntry({
 			id: "grimoire-1",
 			castid: 1,
-			effectid: 10,
-			cost: 20,
-			cast: 5,
+			script: "function maf:spell/test",
+			variants: [{ cast: 5, cost: 20 }],
 			title: "Test Spell",
 			description: "First line\nSecond line",
 		});
@@ -338,11 +337,11 @@ describe("acceptance scenarios", () => {
 		expect(itemFunction).toContain("loot give @s loot maf:item/item-1");
 
 		const grimoireLoot = await readFile(
-			path.join(outputRoot, "data/maf/loot_table/grimoire/cast_1.json"),
+			path.join(outputRoot, "data/maf/loot_table/grimoire/cast_1_v1.json"),
 			"utf-8",
 		);
 		expect(grimoireLoot).toContain('"name": "minecraft:written_book"');
 		expect(grimoireLoot).toContain("castid:1");
-		expect(grimoireLoot).toContain("effectid:10");
+		expect(grimoireLoot).toContain('script:\\"function maf:spell/test\\"');
 	});
 });

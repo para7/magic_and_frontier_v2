@@ -15,11 +15,17 @@ function linesToLoreValues(value: string): string[] {
 		.filter((line) => line.length > 0);
 }
 
-function toSpellCustomData(entry: GrimoireEntry): string {
-	return `maf:{spell:{castid:${entry.castid},effectid:${entry.effectid},cost:${entry.cost},cast:${entry.cast},title:${JSON.stringify(entry.title)},description:${JSON.stringify(entry.description)}}}`;
+function toSpellCustomData(
+	entry: GrimoireEntry,
+	variant: GrimoireEntry["variants"][number],
+): string {
+	return `maf:{spell:{castid:${entry.castid},cost:${variant.cost},cast:${variant.cast},title:${JSON.stringify(entry.title)},description:${JSON.stringify(entry.description)},script:${JSON.stringify(entry.script)}}}`;
 }
 
-function toSpellLootTable(entry: GrimoireEntry): Record<string, unknown> {
+function toSpellLootTable(
+	entry: GrimoireEntry,
+	variant: GrimoireEntry["variants"][number],
+): Record<string, unknown> {
 	const lore = linesToLoreValues(entry.description).map((line) => ({
 		text: line,
 	}));
@@ -45,7 +51,7 @@ function toSpellLootTable(entry: GrimoireEntry): Record<string, unknown> {
 							},
 							{
 								function: "minecraft:set_custom_data",
-								tag: `{${toSpellCustomData(entry)}}`,
+								tag: `{${toSpellCustomData(entry, variant)}}`,
 							},
 						],
 					},
@@ -55,12 +61,15 @@ function toSpellLootTable(entry: GrimoireEntry): Record<string, unknown> {
 	};
 }
 
-function toSpellGiveCommand(entry: GrimoireEntry): string {
+function toSpellGiveCommand(
+	entry: GrimoireEntry,
+	variant: GrimoireEntry["variants"][number],
+): string {
 	const loreParts = linesToLoreValues(entry.description).map(textComponent);
 	const loreValue =
 		loreParts.length > 0 ? `,lore:[${loreParts.join(",")}]` : "";
 	const customName = `'${JSON.stringify({ text: entry.title }).replace(/'/g, "\\'")}'`;
-	return `give @s minecraft:written_book[custom_name=${customName}${loreValue},custom_data={${toSpellCustomData(entry)}}] 1`;
+	return `give @s minecraft:written_book[custom_name=${customName}${loreValue},custom_data={${toSpellCustomData(entry, variant)}}] 1`;
 }
 
 export async function generateGrimoireOutputs(params: {
@@ -78,24 +87,30 @@ export async function generateGrimoireOutputs(params: {
 	await mkdir(lootRoot, { recursive: true });
 
 	for (const entry of entries) {
-		const baseName = `cast_${entry.castid}`;
-		const functionPath = path.join(functionRoot, `${baseName}.mcfunction`);
-		const lootPath = path.join(lootRoot, `${baseName}.json`);
-		const lines = [
-			`# castid=${entry.castid} effectid=${entry.effectid} sourceId=${entry.id}`,
-			toSpellGiveCommand(entry),
-		];
+		for (const [variantIndex, variant] of entry.variants.entries()) {
+			const baseName = `cast_${entry.castid}_v${variantIndex + 1}`;
+			const functionPath = path.join(functionRoot, `${baseName}.mcfunction`);
+			const lootPath = path.join(lootRoot, `${baseName}.json`);
+			const lines = [
+				`# castid=${entry.castid} variant=${variantIndex + 1} sourceId=${entry.id}`,
+				toSpellGiveCommand(entry, variant),
+			];
 
-		await writeFile(functionPath, `${lines.join("\n")}\n`, "utf-8");
-		await writeFile(
-			lootPath,
-			`${JSON.stringify(toSpellLootTable(entry), null, 2)}\n`,
-			"utf-8",
-		);
+			await writeFile(functionPath, `${lines.join("\n")}\n`, "utf-8");
+			await writeFile(
+				lootPath,
+				`${JSON.stringify(toSpellLootTable(entry, variant), null, 2)}\n`,
+				"utf-8",
+			);
+		}
 	}
 
+	const variantCount = entries.reduce(
+		(sum, entry) => sum + entry.variants.length,
+		0,
+	);
 	return {
-		spellFunctions: entries.length,
-		spellLootTables: entries.length,
+		spellFunctions: variantCount,
+		spellLootTables: variantCount,
 	};
 }

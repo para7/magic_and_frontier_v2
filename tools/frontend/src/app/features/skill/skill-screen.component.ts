@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import type { ItemEntry, SkillEntry } from "../../types";
 import { ToastService } from "../../shared/toast.service";
 import { SkillEditorDialogComponent } from "./skill-editor-dialog.component";
@@ -55,6 +55,7 @@ import { SkillEditorDialogComponent } from "./skill-editor-dialog.component";
 export class SkillScreenComponent {
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly entries = signal<SkillEntry[]>([]);
   readonly itemIndex = signal<Record<string, string>>({});
@@ -69,7 +70,7 @@ export class SkillScreenComponent {
 
   async reloadEntries(): Promise<void> {
     try {
-      const state = await api.loadSkills();
+      const state = await this.api.loadSkills();
       this.entries.set(state.entries);
     } catch {
       this.toast.error("skillエントリー一覧の読み込みに失敗しました。");
@@ -78,7 +79,7 @@ export class SkillScreenComponent {
 
   async reloadItems(): Promise<void> {
     try {
-      const state = await api.loadItems();
+      const state = await this.api.loadItems();
       this.itemIndex.set(toItemLabelMap(state.items));
     } catch {
       this.toast.error("item参照一覧の読み込みに失敗しました。");
@@ -130,7 +131,7 @@ export class SkillScreenComponent {
 
   async deleteEntry(id: string): Promise<void> {
     try {
-      await api.deleteSkill(id);
+      await this.api.deleteSkill(id);
       this.toast.success("skillエントリーを削除しました。");
       await this.reloadEntries();
     } catch {

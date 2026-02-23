@@ -1,5 +1,6 @@
-import { hc } from "hono/client";
-import type { AppType } from "@maf/server/rpc";
+import { HttpClient, HttpErrorResponse } from "@angular/common/http";
+import { Injectable, inject } from "@angular/core";
+import { firstValueFrom } from "rxjs";
 import type {
   EnemyEntry,
   EnemySkillEntry,
@@ -8,104 +9,142 @@ import type {
   SkillEntry,
   TreasureEntry
 } from "./types";
-interface SaveDataResponse { ok: boolean; message: string }
+
+interface SaveDataResponse {
+  ok: boolean;
+  message: string;
+}
 
 const API_BASE =
   (globalThis as { __MAF_API_BASE__?: string }).__MAF_API_BASE__ ?? "http://localhost:8787";
-const client = hc<AppType>(API_BASE);
 
-async function unwrap<T>(response: Response): Promise<T> {
-  const body = (await response.json()) as T;
-  if (!response.ok) {
-    throw body;
+@Injectable({ providedIn: "root" })
+export class ApiService {
+  private readonly http = inject(HttpClient);
+
+  private toUrl(path: string): string {
+    return `${API_BASE}${path}`;
   }
-  return body;
-}
 
-async function getJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    method: "GET",
-    headers: { Accept: "application/json" }
-  });
-  return unwrap<T>(response);
-}
-
-async function postJson<T>(path: string, input: unknown): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Accept: "application/json"
-    },
-    body: JSON.stringify(input)
-  });
-  return unwrap<T>(response);
-}
-
-async function deleteJson<T>(path: string): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
-    method: "DELETE",
-    headers: { Accept: "application/json" }
-  });
-  return unwrap<T>(response);
-}
-
-export const api = {
-  async loadItems(): Promise<{ items: ItemEntry[] }> {
-    return unwrap<{ items: ItemEntry[] }>(await client.api.items.$get());
-  },
-  async saveItem(input: unknown): Promise<unknown> {
-    return unwrap<unknown>(await client.api.items.$post({ json: input as never }));
-  },
-  async deleteItem(id: string): Promise<unknown> {
-    return unwrap<unknown>(await client.api.items[":id"].$delete({ param: { id } }));
-  },
-  async loadGrimoire(): Promise<{ entries: GrimoireEntry[] }> {
-    return unwrap<{ entries: GrimoireEntry[] }>(await client.api.grimoire.$get());
-  },
-  async saveGrimoire(input: unknown): Promise<unknown> {
-    return unwrap<unknown>(await client.api.grimoire.$post({ json: input as never }));
-  },
-  async deleteGrimoire(id: string): Promise<unknown> {
-    return unwrap<unknown>(await client.api.grimoire[":id"].$delete({ param: { id } }));
-  },
-  async loadSkills(): Promise<{ entries: SkillEntry[] }> {
-    return getJson<{ entries: SkillEntry[] }>("/api/skills");
-  },
-  async saveSkill(input: unknown): Promise<unknown> {
-    return postJson<unknown>("/api/skills", input);
-  },
-  async deleteSkill(id: string): Promise<unknown> {
-    return deleteJson<unknown>(`/api/skills/${id}`);
-  },
-  async loadEnemySkills(): Promise<{ entries: EnemySkillEntry[] }> {
-    return getJson<{ entries: EnemySkillEntry[] }>("/api/enemy-skills");
-  },
-  async saveEnemySkill(input: unknown): Promise<unknown> {
-    return postJson<unknown>("/api/enemy-skills", input);
-  },
-  async deleteEnemySkill(id: string): Promise<unknown> {
-    return deleteJson<unknown>(`/api/enemy-skills/${id}`);
-  },
-  async loadEnemies(): Promise<{ entries: EnemyEntry[] }> {
-    return getJson<{ entries: EnemyEntry[] }>("/api/enemies");
-  },
-  async saveEnemy(input: unknown): Promise<unknown> {
-    return postJson<unknown>("/api/enemies", input);
-  },
-  async deleteEnemy(id: string): Promise<unknown> {
-    return deleteJson<unknown>(`/api/enemies/${id}`);
-  },
-  async loadTreasures(): Promise<{ entries: TreasureEntry[] }> {
-    return getJson<{ entries: TreasureEntry[] }>("/api/treasures");
-  },
-  async saveTreasure(input: unknown): Promise<unknown> {
-    return postJson<unknown>("/api/treasures", input);
-  },
-  async deleteTreasure(id: string): Promise<unknown> {
-    return deleteJson<unknown>(`/api/treasures/${id}`);
-  },
-  async saveData(): Promise<SaveDataResponse> {
-    return unwrap<SaveDataResponse>(await client.api.save.$post());
+  private async getJson<T>(path: string): Promise<T> {
+    try {
+      return await firstValueFrom(
+        this.http.get<T>(this.toUrl(path), {
+          headers: { Accept: "application/json" }
+        })
+      );
+    } catch (error) {
+      throw unwrapHttpError(error);
+    }
   }
-};
+
+  private async postJson<T>(path: string, input?: unknown): Promise<T> {
+    try {
+      return await firstValueFrom(
+        this.http.post<T>(this.toUrl(path), input ?? null, {
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          }
+        })
+      );
+    } catch (error) {
+      throw unwrapHttpError(error);
+    }
+  }
+
+  private async deleteJson<T>(path: string): Promise<T> {
+    try {
+      return await firstValueFrom(
+        this.http.delete<T>(this.toUrl(path), {
+          headers: { Accept: "application/json" }
+        })
+      );
+    } catch (error) {
+      throw unwrapHttpError(error);
+    }
+  }
+
+  loadItems(): Promise<{ items: ItemEntry[] }> {
+    return this.getJson<{ items: ItemEntry[] }>("/api/items");
+  }
+
+  saveItem(input: unknown): Promise<unknown> {
+    return this.postJson<unknown>("/api/items", input);
+  }
+
+  deleteItem(id: string): Promise<unknown> {
+    return this.deleteJson<unknown>(`/api/items/${id}`);
+  }
+
+  loadGrimoire(): Promise<{ entries: GrimoireEntry[] }> {
+    return this.getJson<{ entries: GrimoireEntry[] }>("/api/grimoire");
+  }
+
+  saveGrimoire(input: unknown): Promise<unknown> {
+    return this.postJson<unknown>("/api/grimoire", input);
+  }
+
+  deleteGrimoire(id: string): Promise<unknown> {
+    return this.deleteJson<unknown>(`/api/grimoire/${id}`);
+  }
+
+  loadSkills(): Promise<{ entries: SkillEntry[] }> {
+    return this.getJson<{ entries: SkillEntry[] }>("/api/skills");
+  }
+
+  saveSkill(input: unknown): Promise<unknown> {
+    return this.postJson<unknown>("/api/skills", input);
+  }
+
+  deleteSkill(id: string): Promise<unknown> {
+    return this.deleteJson<unknown>(`/api/skills/${id}`);
+  }
+
+  loadEnemySkills(): Promise<{ entries: EnemySkillEntry[] }> {
+    return this.getJson<{ entries: EnemySkillEntry[] }>("/api/enemy-skills");
+  }
+
+  saveEnemySkill(input: unknown): Promise<unknown> {
+    return this.postJson<unknown>("/api/enemy-skills", input);
+  }
+
+  deleteEnemySkill(id: string): Promise<unknown> {
+    return this.deleteJson<unknown>(`/api/enemy-skills/${id}`);
+  }
+
+  loadEnemies(): Promise<{ entries: EnemyEntry[] }> {
+    return this.getJson<{ entries: EnemyEntry[] }>("/api/enemies");
+  }
+
+  saveEnemy(input: unknown): Promise<unknown> {
+    return this.postJson<unknown>("/api/enemies", input);
+  }
+
+  deleteEnemy(id: string): Promise<unknown> {
+    return this.deleteJson<unknown>(`/api/enemies/${id}`);
+  }
+
+  loadTreasures(): Promise<{ entries: TreasureEntry[] }> {
+    return this.getJson<{ entries: TreasureEntry[] }>("/api/treasures");
+  }
+
+  saveTreasure(input: unknown): Promise<unknown> {
+    return this.postJson<unknown>("/api/treasures", input);
+  }
+
+  deleteTreasure(id: string): Promise<unknown> {
+    return this.deleteJson<unknown>(`/api/treasures/${id}`);
+  }
+
+  saveData(): Promise<SaveDataResponse> {
+    return this.postJson<SaveDataResponse>("/api/save");
+  }
+}
+
+function unwrapHttpError(error: unknown): unknown {
+  if (error instanceof HttpErrorResponse) {
+    return error.error ?? { ok: false, message: error.message };
+  }
+  return error;
+}

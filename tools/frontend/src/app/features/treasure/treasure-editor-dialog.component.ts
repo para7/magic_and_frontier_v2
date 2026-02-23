@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { createTreasureDraft, createTreasureDropRefDraft } from "../../models/drafts";
 import type { TreasureDropRefDraft } from "../../models/drafts";
 import { treasureDraftToSaveInput, treasureEntryToDraft } from "../../services/editor-mappers";
@@ -130,6 +130,7 @@ export class TreasureEditorDialogComponent {
   private readonly data = inject<TreasureEditorDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<TreasureEditorDialogComponent>);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly mode = signal<"create" | "edit" | "duplicate">(this.data.mode);
   readonly draft = signal(
@@ -144,7 +145,10 @@ export class TreasureEditorDialogComponent {
     this.items().map((item) => ({ id: item.id, label: item.itemId }))
   );
   readonly grimoireOptions = computed<ReferenceOption[]>(() =>
-    this.grimoireEntries().map((entry) => ({ id: entry.id, label: entry.title || String(entry.castid) }))
+    this.grimoireEntries().map((entry) => ({
+      id: entry.id,
+      label: entry.title || `${entry.castid} (${entry.variants.length} variants)`
+    }))
   );
 
   constructor() {
@@ -202,7 +206,7 @@ export class TreasureEditorDialogComponent {
 
   async loadReferences(): Promise<void> {
     try {
-      const [itemState, grimoireState] = await Promise.all([api.loadItems(), api.loadGrimoire()]);
+      const [itemState, grimoireState] = await Promise.all([this.api.loadItems(), this.api.loadGrimoire()]);
       this.items.set(itemState.items);
       this.grimoireEntries.set(grimoireState.entries);
       this.draft.update((current) => ({
@@ -221,7 +225,7 @@ export class TreasureEditorDialogComponent {
   async save(): Promise<void> {
     this.fieldErrors.set({});
     try {
-      await api.saveTreasure(treasureDraftToSaveInput(this.draft()));
+      await this.api.saveTreasure(treasureDraftToSaveInput(this.draft()));
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;

@@ -1,12 +1,12 @@
 import { CommonModule } from "@angular/common";
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
-import type { AppScreen } from "../types";
+import { RouterLink, RouterLinkActive } from "@angular/router";
 
 @Component({
   selector: "app-screen-sidebar",
   standalone: true,
-  imports: [CommonModule, MatButtonModule],
+  imports: [CommonModule, MatButtonModule, RouterLink, RouterLinkActive],
   styleUrl: "./screen-sidebar.component.css",
   template: `
     <aside class="site-sidebar" aria-label="画面切り替え">
@@ -14,48 +14,54 @@ import type { AppScreen } from "../types";
         <button
           mat-button
           class="sidebar-link"
-          [class.active-nav]="screen === 'item'"
-          (click)="switch.emit('item')"
+          routerLink="/items"
+          routerLinkActive="active-nav"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           アイテム
         </button>
         <button
           mat-button
           class="sidebar-link"
-          [class.active-nav]="screen === 'grimoire'"
-          (click)="switch.emit('grimoire')"
+          routerLink="/grimoire"
+          routerLinkActive="active-nav"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           grimoireDB
         </button>
         <button
           mat-button
           class="sidebar-link"
-          [class.active-nav]="screen === 'skill'"
-          (click)="switch.emit('skill')"
+          routerLink="/skills"
+          routerLinkActive="active-nav"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           skill
         </button>
         <button
           mat-button
           class="sidebar-link"
-          [class.active-nav]="screen === 'enemySkill'"
-          (click)="switch.emit('enemySkill')"
+          routerLink="/enemy-skills"
+          routerLinkActive="active-nav"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           enemy_skill
         </button>
         <button
           mat-button
           class="sidebar-link"
-          [class.active-nav]="screen === 'enemy'"
-          (click)="switch.emit('enemy')"
+          routerLink="/enemies"
+          routerLinkActive="active-nav"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           enemy
         </button>
         <button
           mat-button
           class="sidebar-link"
-          [class.active-nav]="screen === 'treasure'"
-          (click)="switch.emit('treasure')"
+          routerLink="/treasures"
+          routerLinkActive="active-nav"
+          [routerLinkActiveOptions]="{ exact: true }"
         >
           treasure
         </button>
@@ -69,7 +75,5 @@ import type { AppScreen } from "../types";
   `
 })
 export class ScreenSidebarComponent {
-  @Input({ required: true }) screen!: AppScreen;
-  @Output() readonly switch = new EventEmitter<AppScreen>();
   @Output() readonly save = new EventEmitter<void>();
 }

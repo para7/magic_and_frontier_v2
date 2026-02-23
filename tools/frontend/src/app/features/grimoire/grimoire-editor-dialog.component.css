@@ -12,6 +12,28 @@
   color: var(--err);
 }
 
+.variants {
+  display: grid;
+  gap: 8px;
+}
+
+.variants-header {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.variants-header h3 {
+  margin: 0;
+}
+
+.variant-row {
+  align-items: center;
+  display: grid;
+  gap: 8px;
+  grid-template-columns: 1fr 1fr auto;
+}
+
 @media (max-width: 760px) {
   .form-grid {
     grid-template-columns: 1fr;
@@ -19,5 +41,9 @@
 
   .form-span-2 {
     grid-column: auto;
+  }
+
+  .variant-row {
+    grid-template-columns: 1fr;
   }
 }

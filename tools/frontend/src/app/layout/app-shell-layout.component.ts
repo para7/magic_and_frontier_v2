@@ -1,7 +1,6 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { MatToolbarModule } from "@angular/material/toolbar";
 import { ScreenSidebarComponent } from "./screen-sidebar.component";
-import type { AppScreen } from "../types";
 
 @Component({
   selector: "app-shell-layout",
@@ -16,8 +15,6 @@ import type { AppScreen } from "../types";
 
       <div class="app-layout">
         <app-screen-sidebar
-          [screen]="screen"
-          (switch)="screenChange.emit($event)"
           (save)="saveRequested.emit()"
         />
 
@@ -29,7 +26,5 @@ import type { AppScreen } from "../types";
   `
 })
 export class AppShellLayoutComponent {
-  @Input({ required: true }) screen!: AppScreen;
-  @Output() readonly screenChange = new EventEmitter<AppScreen>();
   @Output() readonly saveRequested = new EventEmitter<void>();
 }

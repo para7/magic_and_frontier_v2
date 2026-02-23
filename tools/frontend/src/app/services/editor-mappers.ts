@@ -33,11 +33,13 @@ export function grimoireEntryToDraft(entry: GrimoireEntry, duplicate = false): G
   return {
     id: duplicate ? crypto.randomUUID() : entry.id,
     castid: String(entry.castid),
-    effectid: String(entry.effectid),
-    cost: String(entry.cost),
-    cast: String(entry.cast),
+    script: entry.script,
     title: entry.title,
-    description: entry.description
+    description: entry.description,
+    variants: entry.variants.map((variant) => ({
+      cast: String(variant.cast),
+      cost: String(variant.cost)
+    }))
   };
 }
 
@@ -68,20 +70,24 @@ export function itemDraftToSaveInput(draft: ItemDraft): {
 export function grimoireDraftToSaveInput(draft: GrimoireDraft): {
   id: string;
   castid: number;
-  effectid: number;
-  cost: number;
-  cast: number;
+  script: string;
   title: string;
   description: string;
+  variants: {
+    cast: number;
+    cost: number;
+  }[];
 } {
   return {
     id: draft.id,
     castid: Number.parseInt(draft.castid, 10),
-    effectid: Number.parseInt(draft.effectid, 10),
-    cost: Number.parseInt(draft.cost, 10),
-    cast: Number.parseInt(draft.cast, 10),
+    script: draft.script,
     title: draft.title,
-    description: draft.description
+    description: draft.description,
+    variants: draft.variants.map((variant) => ({
+      cast: Number.parseInt(variant.cast, 10),
+      cost: Number.parseInt(variant.cost, 10)
+    }))
   };
 }
 

@@ -28,11 +28,10 @@ describe("grimoire usecase", () => {
     const result = await usecase.saveGrimoireEntry({
       id: "entry-1",
       castid: 1,
-      effectid: 10,
-      cost: 30,
-      cast: 15,
+      script: "function maf:spell/heal",
       title: "Heal",
-      description: "Recover HP"
+      description: "Recover HP",
+      variants: [{ cast: 15, cost: 30 }]
     });
 
     expect(result.ok).toBe(true);
@@ -40,37 +39,69 @@ describe("grimoire usecase", () => {
     expect(result.mode).toBe("created");
     expect(memory.getState().entries).toHaveLength(1);
     expect(memory.getState().entries[0]?.castid).toBe(1);
+    expect(memory.getState().entries[0]?.variants).toEqual([{ cast: 15, cost: 30 }]);
   });
 
-  test("auto reassigns duplicated castid on save", async () => {
+  test("rejects duplicated castid on save", async () => {
     const memory = createMemoryRepository();
     const usecase = createGrimoireUsecase({ grimoireRepository: memory.repository });
 
     await usecase.saveGrimoireEntry({
       id: "entry-1",
       castid: 5,
-      effectid: 1,
-      cost: 1,
-      cast: 1,
+      script: "say a",
       title: "A",
-      description: "A"
+      description: "A",
+      variants: [{ cast: 1, cost: 1 }]
     });
 
     const result = await usecase.saveGrimoireEntry({
       id: "entry-2",
       castid: 5,
-      effectid: 2,
-      cost: 2,
-      cast: 2,
+      script: "say b",
       title: "B",
-      description: "B"
+      description: "B",
+      variants: [{ cast: 2, cost: 2 }]
+    });
+
+    expect(result.ok).toBe(false);
+    if (result.ok) return;
+    expect(result.fieldErrors.castid).toContain("already used");
+    expect(memory.getState().entries.map((entry) => entry.castid)).toEqual([5]);
+  });
+
+  test("returns warning when castid is changed by edit", async () => {
+    const memory = createMemoryRepository({
+      entries: [
+        {
+          id: "entry-1",
+          castid: 5,
+          script: "say a",
+          title: "A",
+          description: "A",
+          variants: [{ cast: 1, cost: 1 }],
+          updatedAt: "2026-02-21T00:00:00.000Z"
+        }
+      ]
+    });
+    const usecase = createGrimoireUsecase({
+      grimoireRepository: memory.repository,
+      now: () => new Date("2026-02-22T00:00:00.000Z")
+    });
+
+    const result = await usecase.saveGrimoireEntry({
+      id: "entry-1",
+      castid: 15,
+      script: "say a2",
+      title: "A",
+      description: "AA",
+      variants: [{ cast: 2, cost: 2 }]
     });
 
     expect(result.ok).toBe(true);
     if (!result.ok) return;
-    expect(result.reassignments).toHaveLength(1);
-    expect(result.reassignments[0]?.from).toBe(5);
-    expect(result.reassignments[0]?.to).toBe(6);
-    expect(memory.getState().entries.map((entry) => entry.castid)).toEqual([5, 6]);
+    expect(result.warnings?.castidChanged?.from).toBe(5);
+    expect(result.warnings?.castidChanged?.to).toBe(15);
+    expect(memory.getState().entries[0]?.castid).toBe(15);
   });
 });

@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { ToastService } from "../../shared/toast.service";
 import type { GrimoireEntry, ItemEntry, TreasureEntry } from "../../types";
 import { TreasureEditorDialogComponent } from "./treasure-editor-dialog.component";
@@ -60,6 +60,7 @@ import { TreasureEditorDialogComponent } from "./treasure-editor-dialog.componen
 export class TreasureScreenComponent {
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly entries = signal<TreasureEntry[]>([]);
   readonly referenceIndex = signal<Record<string, string>>({});
@@ -74,7 +75,7 @@ export class TreasureScreenComponent {
 
   async reloadEntries(): Promise<void> {
     try {
-      const state = await api.loadTreasures();
+      const state = await this.api.loadTreasures();
       this.entries.set(state.entries);
     } catch {
       this.toast.error("treasureエントリー一覧の読み込みに失敗しました。");
@@ -83,7 +84,7 @@ export class TreasureScreenComponent {
 
   async reloadReferences(): Promise<void> {
     try {
-      const [itemState, grimoireState] = await Promise.all([api.loadItems(), api.loadGrimoire()]);
+      const [itemState, grimoireState] = await Promise.all([this.api.loadItems(), this.api.loadGrimoire()]);
       this.referenceIndex.set(toReferenceLabelMap(itemState.items, grimoireState.entries));
     } catch {
       this.toast.error("参照一覧の読み込みに失敗しました。");
@@ -135,7 +136,7 @@ export class TreasureScreenComponent {
 
   async deleteEntry(id: string): Promise<void> {
     try {
-      await api.deleteTreasure(id);
+      await this.api.deleteTreasure(id);
       this.toast.success("treasureエントリーを削除しました。");
       await this.reloadEntries();
     } catch {
@@ -151,7 +152,10 @@ function toReferenceLabelMap(
   return {
     ...Object.fromEntries(items.map((entry) => [entry.id, `[item] ${entry.itemId}`])),
     ...Object.fromEntries(
-      grimoireEntries.map((entry) => [entry.id, `[grimoire] ${entry.title || entry.castid}`])
+      grimoireEntries.map((entry) => [
+        entry.id,
+        `[grimoire] ${entry.title || `${entry.castid} (${entry.variants.length} variants)`}`
+      ])
     )
   };
 }

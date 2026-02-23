@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { createEnemyDraft } from "../../models/drafts";
 import { enemyDraftToSaveInput, enemyEntryToDraft } from "../../services/editor-mappers";
 import { ToastService } from "../../shared/toast.service";
@@ -138,6 +138,7 @@ export class EnemyEditorDialogComponent {
   private readonly data = inject<EnemyEditorDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<EnemyEditorDialogComponent>);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly mode = signal<"create" | "edit" | "duplicate">(this.data.mode);
   readonly draft = signal(
@@ -170,7 +171,7 @@ export class EnemyEditorDialogComponent {
 
   async loadEnemySkills(): Promise<void> {
     try {
-      const state = await api.loadEnemySkills();
+      const state = await this.api.loadEnemySkills();
       this.enemySkills.set(state.entries);
     } catch {
       this.toast.error("enemy_skill参照一覧の読み込みに失敗しました。");
@@ -180,7 +181,7 @@ export class EnemyEditorDialogComponent {
   async save(): Promise<void> {
     this.fieldErrors.set({});
     try {
-      await api.saveEnemy(enemyDraftToSaveInput(this.draft()));
+      await this.api.saveEnemy(enemyDraftToSaveInput(this.draft()));
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;

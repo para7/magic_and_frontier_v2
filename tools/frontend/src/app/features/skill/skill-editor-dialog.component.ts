@@ -5,7 +5,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { createSkillDraft } from "../../models/drafts";
 import { skillDraftToSaveInput, skillEntryToDraft } from "../../services/editor-mappers";
 import { ReferencePickerComponent } from "../../shared/reference-picker.component";
@@ -63,6 +63,7 @@ export class SkillEditorDialogComponent {
   private readonly data = inject<SkillEditorDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<SkillEditorDialogComponent>);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly mode = signal<"create" | "edit" | "duplicate">(this.data.mode);
   readonly draft = signal(
@@ -88,7 +89,7 @@ export class SkillEditorDialogComponent {
 
   async loadItems(): Promise<void> {
     try {
-      const state = await api.loadItems();
+      const state = await this.api.loadItems();
       this.itemEntries.set(state.items);
       if (!this.draft().itemId && state.items[0]) {
         this.onItemChange(state.items[0].id);
@@ -101,7 +102,7 @@ export class SkillEditorDialogComponent {
   async save(): Promise<void> {
     this.fieldErrors.set({});
     try {
-      await api.saveSkill(skillDraftToSaveInput(this.draft()));
+      await this.api.saveSkill(skillDraftToSaveInput(this.draft()));
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;

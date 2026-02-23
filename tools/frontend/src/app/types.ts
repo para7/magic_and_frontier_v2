@@ -1,5 +1,3 @@
-export type AppScreen = "item" | "grimoire" | "skill" | "enemySkill" | "enemy" | "treasure";
-
 export interface ItemEntry {
   id: string;
   itemId: string;
@@ -17,11 +15,13 @@ export interface ItemEntry {
 export interface GrimoireEntry {
   id: string;
   castid: number;
-  effectid: number;
-  cost: number;
-  cast: number;
+  script: string;
   title: string;
   description: string;
+  variants: {
+    cast: number;
+    cost: number;
+  }[];
   updatedAt: string;
 }
 

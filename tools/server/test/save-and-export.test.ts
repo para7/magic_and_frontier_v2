@@ -114,9 +114,8 @@ describe("save/export", () => {
 		await grimoireUsecase.saveGrimoireEntry({
 			id: "grimoire-1",
 			castid: 1,
-			effectid: 10,
-			cost: 20,
-			cast: 5,
+			script: "function maf:spell/test",
+			variants: [{ cast: 5, cost: 20 }],
 			title: "Test Spell",
 			description: "First line\nSecond line",
 		});
@@ -147,12 +146,12 @@ describe("save/export", () => {
 		expect(itemFunction).toContain("loot give @s loot maf:item/item-1");
 
 		const grimoireLoot = await readFile(
-			path.join(outputRoot, "data/maf/loot_table/grimoire/cast_1.json"),
+			path.join(outputRoot, "data/maf/loot_table/grimoire/cast_1_v1.json"),
 			"utf-8",
 		);
 		expect(grimoireLoot).toContain('"name": "minecraft:written_book"');
 		expect(grimoireLoot).toContain("castid:1");
-		expect(grimoireLoot).toContain("effectid:10");
+		expect(grimoireLoot).toContain('script:\\"function maf:spell/test\\"');
 	});
 
 	test("POST /api/save: returns generated totals that match produced files", async () => {
@@ -163,6 +162,10 @@ describe("save/export", () => {
 		const templatePath = path.join(tempRoot, "pack-template.mcmeta");
 		const itemStatePath = path.join(tempRoot, "item-state.json");
 		const grimoireStatePath = path.join(tempRoot, "grimoire-state.json");
+		const skillStatePath = path.join(tempRoot, "skill-state.json");
+		const enemySkillStatePath = path.join(tempRoot, "enemy-skill-state.json");
+		const enemyStatePath = path.join(tempRoot, "enemy-state.json");
+		const treasureStatePath = path.join(tempRoot, "treasure-state.json");
 
 		await writeFile(templatePath, '{"pack":{"pack_format":61,"description":"test"}}\n', "utf-8");
 		await writeFile(
@@ -189,10 +192,18 @@ describe("save/export", () => {
 		const previousEnv = {
 			ITEM_STATE_PATH: process.env.ITEM_STATE_PATH,
 			GRIMOIRE_STATE_PATH: process.env.GRIMOIRE_STATE_PATH,
+			SKILL_STATE_PATH: process.env.SKILL_STATE_PATH,
+			ENEMY_SKILL_STATE_PATH: process.env.ENEMY_SKILL_STATE_PATH,
+			ENEMY_STATE_PATH: process.env.ENEMY_STATE_PATH,
+			TREASURE_STATE_PATH: process.env.TREASURE_STATE_PATH,
 			EXPORT_SETTINGS_PATH: process.env.EXPORT_SETTINGS_PATH,
 		};
 		process.env.ITEM_STATE_PATH = itemStatePath;
 		process.env.GRIMOIRE_STATE_PATH = grimoireStatePath;
+		process.env.SKILL_STATE_PATH = skillStatePath;
+		process.env.ENEMY_SKILL_STATE_PATH = enemySkillStatePath;
+		process.env.ENEMY_STATE_PATH = enemyStatePath;
+		process.env.TREASURE_STATE_PATH = treasureStatePath;
 		process.env.EXPORT_SETTINGS_PATH = settingsPath;
 
 		try {
@@ -220,9 +231,8 @@ describe("save/export", () => {
 				body: JSON.stringify({
 					id: "grimoire-2",
 					castid: 2,
-					effectid: 20,
-					cost: 40,
-					cast: 6,
+					script: "function maf:spell/apple",
+					variants: [{ cast: 6, cost: 40 }],
 					title: "Apple Spell",
 					description: "desc",
 				}),
@@ -243,6 +253,10 @@ describe("save/export", () => {
 		} finally {
 			process.env.ITEM_STATE_PATH = previousEnv.ITEM_STATE_PATH;
 			process.env.GRIMOIRE_STATE_PATH = previousEnv.GRIMOIRE_STATE_PATH;
+			process.env.SKILL_STATE_PATH = previousEnv.SKILL_STATE_PATH;
+			process.env.ENEMY_SKILL_STATE_PATH = previousEnv.ENEMY_SKILL_STATE_PATH;
+			process.env.ENEMY_STATE_PATH = previousEnv.ENEMY_STATE_PATH;
+			process.env.TREASURE_STATE_PATH = previousEnv.TREASURE_STATE_PATH;
 			process.env.EXPORT_SETTINGS_PATH = previousEnv.EXPORT_SETTINGS_PATH;
 		}
 	});
@@ -336,9 +350,8 @@ describe("save/export", () => {
 				body: JSON.stringify({
 					id: grimoireId,
 					castid: 2,
-					effectid: 20,
-					cost: 40,
-					cast: 6,
+					script: "function maf:spell/apple",
+					variants: [{ cast: 6, cost: 40 }],
 					title: "Apple Spell",
 					description: "desc",
 				}),

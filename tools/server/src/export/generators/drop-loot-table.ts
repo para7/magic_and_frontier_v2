@@ -16,7 +16,8 @@ function linesToLoreValues(value: string): string[] {
 }
 
 function toSpellCustomData(entry: GrimoireEntry): string {
-	return `spell:{castid:${entry.castid},effectid:${entry.effectid},cost:${entry.cost},cast:${entry.cast},title:${JSON.stringify(entry.title)},description:${JSON.stringify(entry.description)}}`;
+	const primaryVariant = entry.variants[0] ?? { cast: 0, cost: 0 };
+	return `spell:{castid:${entry.castid},cost:${primaryVariant.cost},cast:${primaryVariant.cast},title:${JSON.stringify(entry.title)},description:${JSON.stringify(entry.description)},script:${JSON.stringify(entry.script)}}`;
 }
 
 function toCountValue(drop: DropRefLike): number | Record<string, unknown> {

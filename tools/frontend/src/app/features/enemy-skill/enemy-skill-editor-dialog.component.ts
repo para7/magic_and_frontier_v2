@@ -6,7 +6,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { MatSelectModule } from "@angular/material/select";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { createEnemySkillDraft } from "../../models/drafts";
 import { enemySkillDraftToSaveInput, enemySkillEntryToDraft } from "../../services/editor-mappers";
 import { ToastService } from "../../shared/toast.service";
@@ -74,6 +74,7 @@ export class EnemySkillEditorDialogComponent {
   private readonly data = inject<EnemySkillEditorDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<EnemySkillEditorDialogComponent>);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly mode = signal<"create" | "edit" | "duplicate">(this.data.mode);
   readonly draft = signal(
@@ -90,7 +91,7 @@ export class EnemySkillEditorDialogComponent {
   async save(): Promise<void> {
     this.fieldErrors.set({});
     try {
-      await api.saveEnemySkill(enemySkillDraftToSaveInput(this.draft()));
+      await this.api.saveEnemySkill(enemySkillDraftToSaveInput(this.draft()));
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;

@@ -1,10 +1,14 @@
 export type GrimoireRecord = {
 	castid: number;
-	effectid: number;
-	cost: number;
-	cast: number;
+	script: string;
 	title: string;
 	description: string;
+	variants: GrimoireVariant[];
+};
+
+export type GrimoireVariant = {
+	cast: number;
+	cost: number;
 };
 
 export type GrimoireEntry = GrimoireRecord & {
@@ -22,26 +26,24 @@ export const defaultGrimoireState: GrimoireState = {
 
 export type GrimoireFieldErrors = Partial<
 	Record<
-		"castid" | "effectid" | "cost" | "cast" | "title" | "description",
+		| "castid"
+		| "script"
+		| "variants"
+		| `variants.${number}.cast`
+		| `variants.${number}.cost`
+		| "title"
+		| "description",
 		string
 	>
 >;
 
-export type CastIdReassignment = {
-	id: string;
-	title: string;
-	from: number;
-	to: number;
-};
-
 export type SaveGrimoireEntryInput = {
 	id: string;
 	castid: number;
-	effectid: number;
-	cost: number;
-	cast: number;
+	script: string;
 	title: string;
 	description: string;
+	variants: GrimoireVariant[];
 };
 
 export type SaveGrimoireEntryResult =
@@ -49,7 +51,12 @@ export type SaveGrimoireEntryResult =
 			ok: true;
 			entry: GrimoireEntry;
 			mode: "created" | "updated";
-			reassignments: CastIdReassignment[];
+			warnings?: {
+				castidChanged?: {
+					from: number;
+					to: number;
+				};
+			};
 	  }
 	| {
 			ok: false;

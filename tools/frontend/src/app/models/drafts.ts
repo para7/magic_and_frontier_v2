@@ -13,11 +13,13 @@ export interface ItemDraft {
 export interface GrimoireDraft {
   id: string;
   castid: string;
-  effectid: string;
-  cost: string;
-  cast: string;
+  script: string;
   title: string;
   description: string;
+  variants: {
+    cast: string;
+    cost: string;
+  }[];
 }
 
 export interface SkillDraft {
@@ -89,11 +91,10 @@ export function createGrimoireDraft(): GrimoireDraft {
   return {
     id: crypto.randomUUID(),
     castid: "0",
-    effectid: "0",
-    cost: "0",
-    cast: "0",
+    script: "",
     title: "",
-    description: ""
+    description: "",
+    variants: [{ cast: "0", cost: "0" }]
   };
 }
 

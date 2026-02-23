@@ -4,7 +4,7 @@ import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
-import { api } from "../../api";
+import { ApiService } from "../../api";
 import { ItemEditorDialogComponent } from "./item-editor-dialog.component";
 import { ToastService } from "../../shared/toast.service";
 import type { ItemEntry } from "../../types";
@@ -40,6 +40,7 @@ import type { ItemEntry } from "../../types";
 export class ItemScreenComponent {
   private readonly dialog = inject(MatDialog);
   private readonly toast = inject(ToastService);
+  private readonly api = inject(ApiService);
 
   readonly items = signal<ItemEntry[]>([]);
 
@@ -49,7 +50,7 @@ export class ItemScreenComponent {
 
   async reloadItems(): Promise<void> {
     try {
-      const itemState = await api.loadItems();
+      const itemState = await this.api.loadItems();
       this.items.set(itemState.items);
     } catch {
       this.toast.error("アイテム一覧の読み込みに失敗しました。");
@@ -84,7 +85,7 @@ export class ItemScreenComponent {
 
   async deleteItem(id: string): Promise<void> {
     try {
-      await api.deleteItem(id);
+      await this.api.deleteItem(id);
       this.toast.success("アイテムを削除しました。");
       await this.reloadItems();
     } catch {
