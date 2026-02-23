@@ -22,9 +22,8 @@ import type { GrimoireEntry } from "../../types";
           <button mat-flat-button type="button" (click)="openCreateModal()">エントリー追加</button>
         </div>
       </header>
-      <p>設定された保存先パスのgrimoireDBエントリーを編集・保存します。</p>
 
-      <div class="grimoire-table-wrap" *ngIf="entries().length > 0; else noEntries">
+      <div class="grimoire-table-wrap">
         <table class="grimoire-table">
           <thead>
             <tr>
@@ -60,7 +59,6 @@ import type { GrimoireEntry } from "../../types";
           </tbody>
         </table>
       </div>
-      <ng-template #noEntries><p>grimoireエントリーはまだありません。</p></ng-template>
     </mat-card>
   `
 })

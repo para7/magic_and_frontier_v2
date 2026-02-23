@@ -20,9 +20,8 @@ import { SkillEditorDialogComponent } from "./skill-editor-dialog.component";
         <h1>skillエディター</h1>
         <button mat-flat-button type="button" (click)="openCreateModal()">エントリー追加</button>
       </header>
-      <p>名前で参照先を選択し、内部ではIDを保持して保存します。</p>
 
-      <div class="table-wrap" *ngIf="entries().length > 0; else noEntries">
+      <div class="table-wrap">
         <table class="list-table">
           <thead>
             <tr>
@@ -50,7 +49,6 @@ import { SkillEditorDialogComponent } from "./skill-editor-dialog.component";
           </tbody>
         </table>
       </div>
-      <ng-template #noEntries><p>skillエントリーはまだありません。</p></ng-template>
     </mat-card>
   `
 })

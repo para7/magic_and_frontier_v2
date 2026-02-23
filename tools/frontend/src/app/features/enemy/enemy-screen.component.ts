@@ -20,9 +20,8 @@ import { EnemyEditorDialogComponent } from "./enemy-editor-dialog.component";
         <h1>enemyエディター</h1>
         <button mat-flat-button type="button" (click)="openCreateModal()">エントリー追加</button>
       </header>
-      <p>enemy_skill は名前で選択し、保存時はID配列として保持します。</p>
 
-      <div class="table-wrap" *ngIf="entries().length > 0; else noEntries">
+      <div class="table-wrap">
         <table class="list-table">
           <thead>
             <tr>
@@ -52,7 +51,6 @@ import { EnemyEditorDialogComponent } from "./enemy-editor-dialog.component";
           </tbody>
         </table>
       </div>
-      <ng-template #noEntries><p>enemyエントリーはまだありません。</p></ng-template>
     </mat-card>
   `
 })

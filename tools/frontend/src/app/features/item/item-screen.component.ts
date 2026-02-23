@@ -20,9 +20,8 @@ import type { ItemEntry } from "../../types";
         <h1>アイテムNBTエディター</h1>
         <button mat-flat-button type="button" (click)="openCreateModal()">アイテム追加</button>
       </header>
-      <p>設定された保存先パスから読み込み・保存を行います。</p>
 
-      <ul class="item-list" *ngIf="items().length > 0; else noItems">
+      <ul class="item-list">
         <li class="item-row" *ngFor="let item of items()">
           <div class="item-main">
             <strong>{{ item.itemId }}</strong>
@@ -35,7 +34,6 @@ import type { ItemEntry } from "../../types";
           </div>
         </li>
       </ul>
-      <ng-template #noItems><p>アイテムはまだありません。</p></ng-template>
     </mat-card>
   `
 })

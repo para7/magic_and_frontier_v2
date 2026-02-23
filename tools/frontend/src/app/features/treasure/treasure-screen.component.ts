@@ -20,9 +20,8 @@ import { TreasureEditorDialogComponent } from "./treasure-editor-dialog.componen
         <h1>treasureエディター</h1>
         <button mat-flat-button type="button" (click)="openCreateModal()">エントリー追加</button>
       </header>
-      <p>lootPools は表示名で参照先を選択し、保存時は item/grimoire の内部IDを保持します。</p>
 
-      <div class="table-wrap" *ngIf="entries().length > 0; else noEntries">
+      <div class="table-wrap">
         <table class="list-table">
           <thead>
             <tr>
@@ -55,7 +54,6 @@ import { TreasureEditorDialogComponent } from "./treasure-editor-dialog.componen
           </tbody>
         </table>
       </div>
-      <ng-template #noEntries><p>treasureエントリーはまだありません。</p></ng-template>
     </mat-card>
   `
 })

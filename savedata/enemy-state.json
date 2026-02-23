@@ -1,0 +1,28 @@
+{
+  "entries": [
+    {
+      "id": "66666666-6666-4666-8666-666666666666",
+      "name": "Sample Zombie",
+      "hp": 40,
+      "attack": 6,
+      "defense": 2,
+      "moveSpeed": 0.22,
+      "dropTableId": "starter_loot",
+      "enemySkillIds": [
+        "55555555-5555-4555-8555-555555555555"
+      ],
+      "spawnRule": {
+        "origin": {
+          "x": 0,
+          "y": 64,
+          "z": 0
+        },
+        "distance": {
+          "min": 8,
+          "max": 40
+        }
+      },
+      "updatedAt": "2026-02-23T00:00:00.000Z"
+    }
+  ]
+}

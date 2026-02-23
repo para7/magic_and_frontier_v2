@@ -1,0 +1,11 @@
+{
+  "entries": [
+    {
+      "id": "44444444-4444-4444-8444-444444444444",
+      "name": "Sword Slash",
+      "script": "function maf:skill/sword_slash",
+      "itemId": "22222222-2222-4222-8222-222222222222",
+      "updatedAt": "2026-02-23T00:00:00.000Z"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "entries": [
+    {
+      "id": "55555555-5555-4555-8555-555555555555",
+      "name": "Zombie Roar",
+      "script": "function maf:enemy_skill/zombie_roar",
+      "cooldown": 100,
+      "trigger": "on_timer",
+      "updatedAt": "2026-02-23T00:00:00.000Z"
+    }
+  ]
+}

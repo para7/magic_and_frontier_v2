@@ -20,9 +20,8 @@ import { EnemySkillEditorDialogComponent } from "./enemy-skill-editor-dialog.com
         <h1>enemy_skillエディター</h1>
         <button mat-flat-button type="button" (click)="openCreateModal()">エントリー追加</button>
       </header>
-      <p>敵スキルの script と発火条件を管理します。</p>
 
-      <div class="table-wrap" *ngIf="entries().length > 0; else noEntries">
+      <div class="table-wrap">
         <table class="list-table">
           <thead>
             <tr>
@@ -52,7 +51,6 @@ import { EnemySkillEditorDialogComponent } from "./enemy-skill-editor-dialog.com
           </tbody>
         </table>
       </div>
-      <ng-template #noEntries><p>enemy_skillエントリーはまだありません。</p></ng-template>
     </mat-card>
   `
 })

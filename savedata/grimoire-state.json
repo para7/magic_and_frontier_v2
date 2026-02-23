@@ -1,0 +1,18 @@
+{
+  "entries": [
+    {
+      "id": "33333333-3333-4333-8333-333333333333",
+      "castid": 100,
+      "script": "maf:spell/firebolt",
+      "title": "Firebolt",
+      "description": "Basic sample projectile spell.",
+      "variants": [
+        {
+          "cast": 10,
+          "cost": 5
+        }
+      ],
+      "updatedAt": "2026-02-23T00:00:00.000Z"
+    }
+  ]
+}
