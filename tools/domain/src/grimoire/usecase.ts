@@ -1,5 +1,8 @@
 import * as v from "valibot";
-import type { GrimoireStateRepository } from "../shared/storage.js";
+import type {
+	GrimoireStateRepository,
+	TreasureStateRepository,
+} from "../shared/storage.js";
 import { saveGrimoireEntrySchema } from "./schema.js";
 import type {
 	CastIdReassignment,
@@ -88,6 +91,7 @@ function resolveCastIdConflicts(entries: GrimoireEntry[]): {
 
 export function createGrimoireUsecase(deps: {
 	grimoireRepository: GrimoireStateRepository;
+	treasureRepository?: Pick<TreasureStateRepository, "loadTreasureState">;
 	now?: () => Date;
 }): GrimoireUsecase {
 	return {
@@ -154,6 +158,21 @@ export function createGrimoireUsecase(deps: {
 			const trimmedId = id.trim();
 			if (trimmedId.length === 0) {
 				return { ok: false, formError: "Missing entry id." };
+			}
+
+			if (deps.treasureRepository) {
+				const treasureState = await deps.treasureRepository.loadTreasureState();
+				const referencedBy = treasureState.entries.find((entry) =>
+					entry.lootPools.some(
+						(pool) => pool.kind === "grimoire" && pool.refId === trimmedId,
+					),
+				);
+				if (referencedBy) {
+					return {
+						ok: false,
+						formError: `Entry is referenced by treasure '${referencedBy.name}'.`,
+					};
+				}
 			}
 
 			const state = await deps.grimoireRepository.loadGrimoireState();

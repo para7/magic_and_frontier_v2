@@ -1,5 +1,9 @@
 import * as v from "valibot";
-import type { ItemStateRepository } from "../shared/storage.js";
+import type {
+	ItemStateRepository,
+	SkillStateRepository,
+	TreasureStateRepository,
+} from "../shared/storage.js";
 import { buildItemNbt } from "./nbt.js";
 import { saveItemSchema } from "./schema.js";
 import type {
@@ -40,6 +44,8 @@ function toFieldErrors(
 
 export function createItemUsecase(deps: {
 	itemRepository: ItemStateRepository;
+	skillRepository?: Pick<SkillStateRepository, "loadSkillState">;
+	treasureRepository?: Pick<TreasureStateRepository, "loadTreasureState">;
 	now?: () => Date;
 }): ItemUsecase {
 	return {
@@ -93,6 +99,34 @@ export function createItemUsecase(deps: {
 			const id = input.id.trim();
 			if (id.length === 0) {
 				return { ok: false, formError: "Missing item id." };
+			}
+
+			if (deps.skillRepository) {
+				const skillState = await deps.skillRepository.loadSkillState();
+				const referencedBySkill = skillState.entries.find(
+					(entry) => entry.itemId === id,
+				);
+				if (referencedBySkill) {
+					return {
+						ok: false,
+						formError: `Item is referenced by skill '${referencedBySkill.name}'.`,
+					};
+				}
+			}
+
+			if (deps.treasureRepository) {
+				const treasureState = await deps.treasureRepository.loadTreasureState();
+				const referencedByTreasure = treasureState.entries.find((entry) =>
+					entry.lootPools.some(
+						(pool) => pool.kind === "item" && pool.refId === id,
+					),
+				);
+				if (referencedByTreasure) {
+					return {
+						ok: false,
+						formError: `Item is referenced by treasure '${referencedByTreasure.name}'.`,
+					};
+				}
 			}
 
 			const currentState = await deps.itemRepository.loadItemState();
