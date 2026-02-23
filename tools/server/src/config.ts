@@ -19,6 +19,10 @@ export type ServerConfig = {
 	port: number;
 	itemStatePath: string;
 	grimoireStatePath: string;
+	skillStatePath: string;
+	enemySkillStatePath: string;
+	enemyStatePath: string;
+	treasureStatePath: string;
 	allowedOrigin: string;
 	exportSettingsPath: string;
 };
@@ -32,9 +36,18 @@ export function loadServerConfig(): ServerConfig {
 		grimoireStatePath:
 			process.env.GRIMOIRE_STATE_PATH ??
 			defaultStatePath("grimoire-state.json"),
+		skillStatePath:
+			process.env.SKILL_STATE_PATH ?? defaultStatePath("skill-state.json"),
+		enemySkillStatePath:
+			process.env.ENEMY_SKILL_STATE_PATH ??
+			defaultStatePath("enemy-skill-state.json"),
+		enemyStatePath:
+			process.env.ENEMY_STATE_PATH ?? defaultStatePath("enemy-state.json"),
+		treasureStatePath:
+			process.env.TREASURE_STATE_PATH ??
+			defaultStatePath("treasure-state.json"),
 		allowedOrigin: process.env.ALLOWED_ORIGIN ?? "http://localhost:4200",
 		exportSettingsPath:
-			process.env.EXPORT_SETTINGS_PATH ??
-			defaultExportSettingsPath(),
+			process.env.EXPORT_SETTINGS_PATH ?? defaultExportSettingsPath(),
 	};
 }

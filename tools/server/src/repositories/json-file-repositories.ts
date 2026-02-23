@@ -1,15 +1,32 @@
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
-	defaultItemState,
 	defaultGrimoireState,
-	type ItemState,
-	type ItemStateRepository,
-	normalizeItemState,
-	normalizeGrimoireState,
+	defaultItemState,
 	type GrimoireState,
 	type GrimoireStateRepository,
+	type ItemState,
+	type ItemStateRepository,
+	normalizeGrimoireState,
+	normalizeItemState,
 } from "@maf/domain";
+
+export type EntryState<TEntry> = {
+	entries: TEntry[];
+};
+
+function normalizeEntryState<TEntry>(value: unknown): EntryState<TEntry> {
+	if (!value || typeof value !== "object") {
+		return { entries: [] };
+	}
+
+	const entries = (value as { entries?: unknown }).entries;
+	if (!Array.isArray(entries)) {
+		return { entries: [] };
+	}
+
+	return { entries: entries as TEntry[] };
+}
 
 function isErrnoCode(error: unknown, code: string): boolean {
 	if (!error || typeof error !== "object") {
@@ -65,6 +82,24 @@ export function createGrimoireStateRepository(
 		},
 		async saveGrimoireState(state: GrimoireState): Promise<void> {
 			await writeJson(grimoireStatePath, state);
+		},
+	};
+}
+
+export function createEntryStateRepository<TEntry>(statePath: string): {
+	loadState(): Promise<EntryState<TEntry>>;
+	saveState(state: EntryState<TEntry>): Promise<void>;
+} {
+	return {
+		async loadState(): Promise<EntryState<TEntry>> {
+			const value = await readJson(statePath);
+			if (value == null) {
+				return { entries: [] };
+			}
+			return normalizeEntryState<TEntry>(value);
+		},
+		async saveState(state: EntryState<TEntry>): Promise<void> {
+			await writeJson(statePath, state);
 		},
 	};
 }
