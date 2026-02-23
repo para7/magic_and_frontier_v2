@@ -1,0 +1,11 @@
+.picker-option {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.picker-option small {
+  color: var(--muted);
+  font-size: 11px;
+}

@@ -27,6 +27,38 @@ import type { AppScreen } from "../types";
         >
           grimoireDB
         </button>
+        <button
+          mat-button
+          class="sidebar-link"
+          [class.active-nav]="screen === 'skill'"
+          (click)="switch.emit('skill')"
+        >
+          skill
+        </button>
+        <button
+          mat-button
+          class="sidebar-link"
+          [class.active-nav]="screen === 'enemySkill'"
+          (click)="switch.emit('enemySkill')"
+        >
+          enemy_skill
+        </button>
+        <button
+          mat-button
+          class="sidebar-link"
+          [class.active-nav]="screen === 'enemy'"
+          (click)="switch.emit('enemy')"
+        >
+          enemy
+        </button>
+        <button
+          mat-button
+          class="sidebar-link"
+          [class.active-nav]="screen === 'treasure'"
+          (click)="switch.emit('treasure')"
+        >
+          treasure
+        </button>
       </nav>
       <div class="sidebar-actions">
         <button mat-flat-button class="save-button" (click)="save.emit()">
