@@ -2,6 +2,7 @@ import { createItemUsecase, createSpellbookUsecase } from "@maf/domain";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { loadServerConfig } from "./config.js";
+import { exportDatapack } from "./export/index.js";
 import {
 	createItemStateRepository,
 	createSpellbookStateRepository,
@@ -62,6 +63,17 @@ export function createApp() {
 		const id = c.req.param("id");
 		const result = await spellbookUsecase.deleteSpellbookEntry(id);
 		return c.json(result, result.ok ? 200 : 404);
+	});
+
+	app.post("/api/save", async (c) => {
+		const result = await exportDatapack({
+			itemUsecase,
+			spellbookUsecase,
+			itemStatePath: config.itemStatePath,
+			spellbookStatePath: config.spellbookStatePath,
+			exportSettingsPath: config.exportSettingsPath,
+		});
+		return c.json(result, result.ok ? 200 : 400);
 	});
 
 	return { app, config };

@@ -1,7 +1,18 @@
+import { existsSync } from "node:fs";
 import path from "node:path";
 
 function defaultStatePath(fileName: string): string {
 	return path.resolve(process.cwd(), "../../savedata", fileName);
+}
+
+function defaultExportSettingsPath(): string {
+	const candidates = [
+		path.resolve(process.cwd(), "config/export-settings.json"),
+		path.resolve(process.cwd(), "server/config/export-settings.json"),
+		path.resolve(process.cwd(), "tools/server/config/export-settings.json"),
+	];
+	const existing = candidates.find((candidate) => existsSync(candidate));
+	return existing ?? candidates[0];
 }
 
 export type ServerConfig = {
@@ -9,6 +20,7 @@ export type ServerConfig = {
 	itemStatePath: string;
 	spellbookStatePath: string;
 	allowedOrigin: string;
+	exportSettingsPath: string;
 };
 
 export function loadServerConfig(): ServerConfig {
@@ -21,5 +33,8 @@ export function loadServerConfig(): ServerConfig {
 			process.env.SPELLBOOK_STATE_PATH ??
 			defaultStatePath("spellbook-state.json"),
 		allowedOrigin: process.env.ALLOWED_ORIGIN ?? "http://localhost:4200",
+		exportSettingsPath:
+			process.env.EXPORT_SETTINGS_PATH ??
+			defaultExportSettingsPath(),
 	};
 }

@@ -1,0 +1,12 @@
+{
+  "outputRoot": "../../../datapacks/magic-and-frontier",
+  "namespace": "maf",
+  "templatePackPath": "../../../datapacks/sample_pack/pack.mcmeta",
+  "paths": {
+    "itemFunctionDir": "data/maf/function/item",
+    "itemLootDir": "data/maf/loot_table/item",
+    "spellFunctionDir": "data/maf/function/spellbook",
+    "spellLootDir": "data/maf/loot_table/spellbook",
+    "minecraftTagDir": "data/minecraft/tags/function"
+  }
+}

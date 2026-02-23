@@ -7,6 +7,7 @@ import type {
 	SpellbookState,
 } from "@maf/domain";
 import { Hono } from "hono";
+import type { SaveDataResponse } from "./export/types.js";
 
 // Type-only RPC contract for hono/client.
 const rpcApp = new Hono()
@@ -19,6 +20,9 @@ const rpcApp = new Hono()
 	)
 	.delete("/api/spellbook/:id", (c) =>
 		c.json({ ok: true } as DeleteSpellbookEntryResult),
+	)
+	.post("/api/save", (c) =>
+		c.json({ ok: true, message: "datapack export completed" } as SaveDataResponse),
 	);
 
 export type AppType = typeof rpcApp;
