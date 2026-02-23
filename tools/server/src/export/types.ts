@@ -7,6 +7,12 @@ export type ExportSettings = {
 		itemLootDir: string;
 		spellFunctionDir: string;
 		spellLootDir: string;
+		skillFunctionDir: string;
+		enemySkillFunctionDir: string;
+		enemyFunctionDir: string;
+		enemyLootDir: string;
+		treasureLootDir: string;
+		debugFunctionDir: string;
 		minecraftTagDir: string;
 	};
 };
@@ -16,6 +22,11 @@ export type ExportStats = {
 	itemLootTables: number;
 	spellFunctions: number;
 	spellLootTables: number;
+	skillFunctions: number;
+	enemySkillFunctions: number;
+	enemyFunctions: number;
+	enemyLootTables: number;
+	treasureLootTables: number;
 	totalFiles: number;
 };
 
@@ -33,6 +44,8 @@ export type SaveDataResponse =
 				| "MISSING_ITEM_STATE"
 				| "MISSING_GRIMOIRE_STATE"
 				| "INVALID_CONFIG"
-				| "EXPORT_FAILED";
+				| "EXPORT_FAILED"
+				| "VALIDATION_ERROR"
+				| "REFERENCE_ERROR";
 			details?: string;
 	  };

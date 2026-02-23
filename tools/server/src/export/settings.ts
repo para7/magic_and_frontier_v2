@@ -13,6 +13,17 @@ function asString(value: unknown, key: string): string {
 	return value;
 }
 
+function asStringOrDefault(
+	value: unknown,
+	key: string,
+	fallback: string,
+): string {
+	if (value === undefined) {
+		return fallback;
+	}
+	return asString(value, key);
+}
+
 export async function loadExportSettings(
 	settingsPath: string,
 ): Promise<ExportSettings> {
@@ -36,17 +47,59 @@ export async function loadExportSettings(
 		throw new Error("namespace must match [a-z0-9_.-]+.");
 	}
 
-	const templatePackPath = asString(parsed.templatePackPath, "templatePackPath");
+	const templatePackPath = asString(
+		parsed.templatePackPath,
+		"templatePackPath",
+	);
 	const paths = parsed.paths;
 	if (!isObject(paths)) {
 		throw new Error("paths must be an object.");
 	}
 
-	const itemFunctionDir = asString(paths.itemFunctionDir, "paths.itemFunctionDir");
+	const itemFunctionDir = asString(
+		paths.itemFunctionDir,
+		"paths.itemFunctionDir",
+	);
 	const itemLootDir = asString(paths.itemLootDir, "paths.itemLootDir");
-	const spellFunctionDir = asString(paths.spellFunctionDir, "paths.spellFunctionDir");
+	const spellFunctionDir = asString(
+		paths.spellFunctionDir,
+		"paths.spellFunctionDir",
+	);
 	const spellLootDir = asString(paths.spellLootDir, "paths.spellLootDir");
-	const minecraftTagDir = asString(paths.minecraftTagDir, "paths.minecraftTagDir");
+	const skillFunctionDir = asStringOrDefault(
+		paths.skillFunctionDir,
+		"paths.skillFunctionDir",
+		`data/${namespace}/function/skill`,
+	);
+	const enemySkillFunctionDir = asStringOrDefault(
+		paths.enemySkillFunctionDir,
+		"paths.enemySkillFunctionDir",
+		`data/${namespace}/function/enemy_skill`,
+	);
+	const enemyFunctionDir = asStringOrDefault(
+		paths.enemyFunctionDir,
+		"paths.enemyFunctionDir",
+		`data/${namespace}/function/enemy/spawn`,
+	);
+	const enemyLootDir = asStringOrDefault(
+		paths.enemyLootDir,
+		"paths.enemyLootDir",
+		`data/${namespace}/loot_table/enemy`,
+	);
+	const treasureLootDir = asStringOrDefault(
+		paths.treasureLootDir,
+		"paths.treasureLootDir",
+		`data/${namespace}/loot_table/treasure`,
+	);
+	const debugFunctionDir = asStringOrDefault(
+		paths.debugFunctionDir,
+		"paths.debugFunctionDir",
+		`data/${namespace}/function/debug/give`,
+	);
+	const minecraftTagDir = asString(
+		paths.minecraftTagDir,
+		"paths.minecraftTagDir",
+	);
 
 	const baseDir = path.dirname(settingsPath);
 	return {
@@ -58,6 +111,12 @@ export async function loadExportSettings(
 			itemLootDir,
 			spellFunctionDir,
 			spellLootDir,
+			skillFunctionDir,
+			enemySkillFunctionDir,
+			enemyFunctionDir,
+			enemyLootDir,
+			treasureLootDir,
+			debugFunctionDir,
 			minecraftTagDir,
 		},
 	};

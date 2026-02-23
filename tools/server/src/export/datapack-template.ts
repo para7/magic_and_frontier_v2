@@ -6,13 +6,23 @@ export async function writeDatapackScaffold(
 	settings: ExportSettings,
 ): Promise<void> {
 	await mkdir(settings.outputRoot, { recursive: true });
-	await cp(settings.templatePackPath, path.join(settings.outputRoot, "pack.mcmeta"));
+	await cp(
+		settings.templatePackPath,
+		path.join(settings.outputRoot, "pack.mcmeta"),
+	);
 
 	const outputDirs = [
 		settings.paths.itemFunctionDir,
 		settings.paths.itemLootDir,
 		settings.paths.spellFunctionDir,
 		settings.paths.spellLootDir,
+		settings.paths.skillFunctionDir,
+		settings.paths.enemySkillFunctionDir,
+		settings.paths.enemyFunctionDir,
+		settings.paths.enemyLootDir,
+		settings.paths.treasureLootDir,
+		path.join(settings.paths.debugFunctionDir, "item"),
+		path.join(settings.paths.debugFunctionDir, "grimoire"),
 	];
 
 	for (const relativeDir of outputDirs) {
