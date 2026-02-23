@@ -1,18 +1,18 @@
 import { CommonModule } from "@angular/common";
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
 import { firstValueFrom } from "rxjs";
 import { api } from "../../api";
 import { ItemEditorDialogComponent } from "./item-editor-dialog.component";
-import { StatusMessageComponent } from "../../shared/status-message.component";
+import { ToastService } from "../../shared/toast.service";
 import type { ItemEntry } from "../../types";
 
 @Component({
   selector: "app-item-screen",
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, StatusMessageComponent],
+  imports: [CommonModule, MatCardModule, MatButtonModule],
   styleUrl: "./item-screen.component.css",
   template: `
     <mat-card appearance="outlined">
@@ -36,27 +36,26 @@ import type { ItemEntry } from "../../types";
         </li>
       </ul>
       <ng-template #noItems><p>アイテムはまだありません。</p></ng-template>
-
-      <app-status-message [ok]="success()" [err]="error()" />
     </mat-card>
   `
 })
 export class ItemScreenComponent {
   private readonly dialog = inject(MatDialog);
+  private readonly toast = inject(ToastService);
 
   readonly items = signal<ItemEntry[]>([]);
-  readonly message = signal<{ ok?: string; err?: string }>({});
-
-  readonly success = computed(() => this.message().ok ?? "");
-  readonly error = computed(() => this.message().err ?? "");
 
   constructor() {
     void this.reloadItems();
   }
 
   async reloadItems(): Promise<void> {
-    const itemState = await api.loadItems();
-    this.items.set(itemState.items);
+    try {
+      const itemState = await api.loadItems();
+      this.items.set(itemState.items);
+    } catch {
+      this.toast.error("アイテム一覧の読み込みに失敗しました。");
+    }
   }
 
   async openCreateModal(): Promise<void> {
@@ -67,7 +66,7 @@ export class ItemScreenComponent {
     });
     const result = await firstValueFrom(ref.afterClosed());
     if (result === "saved") {
-      this.message.set({ ok: "アイテムを保存しました。" });
+      this.toast.success("アイテムを保存しました。");
       await this.reloadItems();
     }
   }
@@ -80,19 +79,18 @@ export class ItemScreenComponent {
     });
     const result = await firstValueFrom(ref.afterClosed());
     if (result === "saved") {
-      this.message.set({ ok: "アイテムを保存しました。" });
+      this.toast.success("アイテムを保存しました。");
       await this.reloadItems();
     }
   }
 
   async deleteItem(id: string): Promise<void> {
-    this.message.set({});
     try {
       await api.deleteItem(id);
-      this.message.set({ ok: "アイテムを削除しました。" });
+      this.toast.success("アイテムを削除しました。");
       await this.reloadItems();
     } catch {
-      this.message.set({ err: "アイテムの削除に失敗しました。" });
+      this.toast.error("アイテムの削除に失敗しました。");
     }
   }
 }

@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, computed, inject, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { MatButtonModule } from "@angular/material/button";
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/material/dialog";
@@ -9,6 +9,7 @@ import { api } from "../../api";
 import { createSpellbookDraft } from "../../models/drafts";
 import { spellbookDraftToSaveInput, spellbookEntryToDraft } from "../../services/editor-mappers";
 import type { SaveErrorResult, SpellbookEntry } from "../../types";
+import { ToastService } from "../../shared/toast.service";
 
 export interface SpellbookEditorDialogData {
   mode: "create" | "edit" | "duplicate";
@@ -61,7 +62,6 @@ export interface SpellbookEditorDialogData {
           ></textarea>
         </mat-form-field>
       </form>
-      <p class="status-error" *ngIf="error()">{{ error() }}</p>
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" (click)="cancel()">キャンセル</button>
@@ -72,6 +72,7 @@ export interface SpellbookEditorDialogData {
 export class SpellbookEditorDialogComponent {
   private readonly data = inject<SpellbookEditorDialogData>(MAT_DIALOG_DATA);
   private readonly dialogRef = inject(MatDialogRef<SpellbookEditorDialogComponent>);
+  private readonly toast = inject(ToastService);
 
   readonly mode = signal<"create" | "edit" | "duplicate">(this.data.mode);
   readonly draft = signal(
@@ -80,21 +81,17 @@ export class SpellbookEditorDialogComponent {
       : createSpellbookDraft()
   );
 
-  readonly message = signal<{ err?: string }>({});
-  readonly error = computed(() => this.message().err ?? "");
-
   cancel(): void {
     this.dialogRef.close("cancel");
   }
 
   async save(): Promise<void> {
-    this.message.set({});
     try {
       await api.saveSpellbook(spellbookDraftToSaveInput(this.draft()));
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;
-      this.message.set({ err: result.formError ?? "魔法書エントリーの保存に失敗しました。" });
+      this.toast.error(result.formError ?? "魔法書エントリーの保存に失敗しました。");
     }
   }
 }
