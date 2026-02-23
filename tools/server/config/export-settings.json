@@ -5,8 +5,8 @@
   "paths": {
     "itemFunctionDir": "data/maf/function/item",
     "itemLootDir": "data/maf/loot_table/item",
-    "spellFunctionDir": "data/maf/function/spellbook",
-    "spellLootDir": "data/maf/loot_table/spellbook",
+    "spellFunctionDir": "data/maf/function/grimoire",
+    "spellLootDir": "data/maf/loot_table/grimoire",
     "minecraftTagDir": "data/minecraft/tags/function"
   }
 }

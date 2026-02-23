@@ -22,10 +22,10 @@ import type { AppScreen } from "../types";
         <button
           mat-button
           class="sidebar-link"
-          [class.active-nav]="screen === 'spellbook'"
-          (click)="switch.emit('spellbook')"
+          [class.active-nav]="screen === 'grimoire'"
+          (click)="switch.emit('grimoire')"
         >
-          魔法書DB
+          grimoireDB
         </button>
       </nav>
       <div class="sidebar-actions">

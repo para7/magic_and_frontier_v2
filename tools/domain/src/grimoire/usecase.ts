@@ -1,28 +1,28 @@
 import * as v from "valibot";
-import type { SpellbookStateRepository } from "../shared/storage.js";
-import { saveSpellbookEntrySchema } from "./schema.js";
+import type { GrimoireStateRepository } from "../shared/storage.js";
+import { saveGrimoireEntrySchema } from "./schema.js";
 import type {
 	CastIdReassignment,
-	DeleteSpellbookEntryResult,
-	SaveSpellbookEntryInput,
-	SaveSpellbookEntryResult,
-	SpellbookEntry,
-	SpellbookFieldErrors,
-	SpellbookState,
+	DeleteGrimoireEntryResult,
+	SaveGrimoireEntryInput,
+	SaveGrimoireEntryResult,
+	GrimoireEntry,
+	GrimoireFieldErrors,
+	GrimoireState,
 } from "./types.js";
 
-export interface SpellbookUsecase {
-	loadSpellbook(): Promise<SpellbookState>;
-	saveSpellbookEntry(
-		input: SaveSpellbookEntryInput,
-	): Promise<SaveSpellbookEntryResult>;
-	deleteSpellbookEntry(id: string): Promise<DeleteSpellbookEntryResult>;
+export interface GrimoireUsecase {
+	loadGrimoire(): Promise<GrimoireState>;
+	saveGrimoireEntry(
+		input: SaveGrimoireEntryInput,
+	): Promise<SaveGrimoireEntryResult>;
+	deleteGrimoireEntry(id: string): Promise<DeleteGrimoireEntryResult>;
 }
 
 function toFieldErrors(
-	nested: v.FlatErrors<typeof saveSpellbookEntrySchema>["nested"],
-): SpellbookFieldErrors {
-	const fieldErrors: SpellbookFieldErrors = {};
+	nested: v.FlatErrors<typeof saveGrimoireEntrySchema>["nested"],
+): GrimoireFieldErrors {
+	const fieldErrors: GrimoireFieldErrors = {};
 	if (!nested) {
 		return fieldErrors;
 	}
@@ -37,12 +37,12 @@ function toFieldErrors(
 	return fieldErrors;
 }
 
-function sortByCastId(entries: SpellbookEntry[]): SpellbookEntry[] {
+function sortByCastId(entries: GrimoireEntry[]): GrimoireEntry[] {
 	return [...entries].sort((a, b) => a.castid - b.castid);
 }
 
-function resolveCastIdConflicts(entries: SpellbookEntry[]): {
-	entries: SpellbookEntry[];
+function resolveCastIdConflicts(entries: GrimoireEntry[]): {
+	entries: GrimoireEntry[];
 	reassignments: CastIdReassignment[];
 } {
 	const usedCastIds = new Set<number>();
@@ -86,18 +86,18 @@ function resolveCastIdConflicts(entries: SpellbookEntry[]): {
 	};
 }
 
-export function createSpellbookUsecase(deps: {
-	spellbookRepository: SpellbookStateRepository;
+export function createGrimoireUsecase(deps: {
+	grimoireRepository: GrimoireStateRepository;
 	now?: () => Date;
-}): SpellbookUsecase {
+}): GrimoireUsecase {
 	return {
-		loadSpellbook() {
-			return deps.spellbookRepository.loadSpellbookState();
+		loadGrimoire() {
+			return deps.grimoireRepository.loadGrimoireState();
 		},
-		async saveSpellbookEntry(
-			input: SaveSpellbookEntryInput,
-		): Promise<SaveSpellbookEntryResult> {
-			const parsed = v.safeParse(saveSpellbookEntrySchema, input);
+		async saveGrimoireEntry(
+			input: SaveGrimoireEntryInput,
+		): Promise<SaveGrimoireEntryResult> {
+			const parsed = v.safeParse(saveGrimoireEntrySchema, input);
 			if (!parsed.success) {
 				const flat = v.flatten(parsed.issues);
 				return {
@@ -107,7 +107,7 @@ export function createSpellbookUsecase(deps: {
 				};
 			}
 
-			const state = await deps.spellbookRepository.loadSpellbookState();
+			const state = await deps.grimoireRepository.loadGrimoireState();
 			const now = (deps.now ?? (() => new Date()))().toISOString();
 			const nextEntry = {
 				...parsed.output,
@@ -128,7 +128,7 @@ export function createSpellbookUsecase(deps: {
 
 			const { entries: resolvedEntries, reassignments } =
 				resolveCastIdConflicts(mutableEntries);
-			await deps.spellbookRepository.saveSpellbookState({
+			await deps.grimoireRepository.saveGrimoireState({
 				entries: resolvedEntries,
 			});
 
@@ -148,15 +148,15 @@ export function createSpellbookUsecase(deps: {
 				reassignments,
 			};
 		},
-		async deleteSpellbookEntry(
+		async deleteGrimoireEntry(
 			id: string,
-		): Promise<DeleteSpellbookEntryResult> {
+		): Promise<DeleteGrimoireEntryResult> {
 			const trimmedId = id.trim();
 			if (trimmedId.length === 0) {
 				return { ok: false, formError: "Missing entry id." };
 			}
 
-			const state = await deps.spellbookRepository.loadSpellbookState();
+			const state = await deps.grimoireRepository.loadGrimoireState();
 			const nextEntries = state.entries.filter(
 				(entry) => entry.id !== trimmedId,
 			);
@@ -164,7 +164,7 @@ export function createSpellbookUsecase(deps: {
 				return { ok: false, formError: "Entry not found." };
 			}
 
-			await deps.spellbookRepository.saveSpellbookState({
+			await deps.grimoireRepository.saveGrimoireState({
 				entries: sortByCastId(nextEntries),
 			});
 			return { ok: true, deletedId: trimmedId };

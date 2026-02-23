@@ -1,6 +1,6 @@
 import { hc } from "hono/client";
 import type { AppType } from "@maf/server/rpc";
-import type { ItemEntry, SpellbookEntry } from "./types";
+import type { ItemEntry, GrimoireEntry } from "./types";
 type SaveDataResponse = { ok: boolean; message: string };
 
 const API_BASE =
@@ -25,14 +25,14 @@ export const api = {
   async deleteItem(id: string): Promise<unknown> {
     return unwrap<unknown>(await client.api.items[":id"].$delete({ param: { id } }));
   },
-  async loadSpellbook(): Promise<{ entries: SpellbookEntry[] }> {
-    return unwrap<{ entries: SpellbookEntry[] }>(await client.api.spellbook.$get());
+  async loadGrimoire(): Promise<{ entries: GrimoireEntry[] }> {
+    return unwrap<{ entries: GrimoireEntry[] }>(await client.api.grimoire.$get());
   },
-  async saveSpellbook(input: unknown): Promise<unknown> {
-    return unwrap<unknown>(await client.api.spellbook.$post({ json: input as never }));
+  async saveGrimoire(input: unknown): Promise<unknown> {
+    return unwrap<unknown>(await client.api.grimoire.$post({ json: input as never }));
   },
-  async deleteSpellbook(id: string): Promise<unknown> {
-    return unwrap<unknown>(await client.api.spellbook[":id"].$delete({ param: { id } }));
+  async deleteGrimoire(id: string): Promise<unknown> {
+    return unwrap<unknown>(await client.api.grimoire[":id"].$delete({ param: { id } }));
   },
   async saveData(): Promise<SaveDataResponse> {
     return unwrap<SaveDataResponse>(await client.api.save.$post());

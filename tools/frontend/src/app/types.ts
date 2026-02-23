@@ -1,4 +1,4 @@
-export type AppScreen = "item" | "spellbook";
+export type AppScreen = "item" | "grimoire";
 
 export interface ItemEntry {
   id: string;
@@ -14,7 +14,7 @@ export interface ItemEntry {
   updatedAt: string;
 }
 
-export interface SpellbookEntry {
+export interface GrimoireEntry {
   id: string;
   castid: number;
   effectid: number;

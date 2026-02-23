@@ -1,6 +1,6 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
-import type { SpellbookEntry } from "@maf/domain";
+import type { GrimoireEntry } from "@maf/domain";
 import type { ExportSettings } from "../types.js";
 
 function textComponent(value: string): string {
@@ -15,11 +15,11 @@ function linesToLoreValues(value: string): string[] {
 		.filter((line) => line.length > 0);
 }
 
-function toSpellCustomData(entry: SpellbookEntry): string {
+function toSpellCustomData(entry: GrimoireEntry): string {
 	return `maf:{spell:{castid:${entry.castid},effectid:${entry.effectid},cost:${entry.cost},cast:${entry.cast},title:${JSON.stringify(entry.title)},description:${JSON.stringify(entry.description)}}}`;
 }
 
-function toSpellLootTable(entry: SpellbookEntry): Record<string, unknown> {
+function toSpellLootTable(entry: GrimoireEntry): Record<string, unknown> {
 	const lore = linesToLoreValues(entry.description).map((line) => ({ text: line }));
 	return {
 		type: "minecraft:generic",
@@ -53,16 +53,16 @@ function toSpellLootTable(entry: SpellbookEntry): Record<string, unknown> {
 	};
 }
 
-function toSpellGiveCommand(entry: SpellbookEntry): string {
+function toSpellGiveCommand(entry: GrimoireEntry): string {
 	const loreParts = linesToLoreValues(entry.description).map(textComponent);
 	const loreValue = loreParts.length > 0 ? `,lore:[${loreParts.join(",")}]` : "";
 	const customName = `'${JSON.stringify({ text: entry.title }).replace(/'/g, "\\'")}'`;
 	return `give @s minecraft:written_book[custom_name=${customName}${loreValue},custom_data={${toSpellCustomData(entry)}}] 1`;
 }
 
-export async function generateSpellbookOutputs(params: {
+export async function generateGrimoireOutputs(params: {
 	settings: ExportSettings;
-	entries: SpellbookEntry[];
+	entries: GrimoireEntry[];
 }): Promise<{ spellFunctions: number; spellLootTables: number }> {
 	const { settings, entries } = params;
 	const functionRoot = path.join(

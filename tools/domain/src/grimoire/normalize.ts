@@ -1,7 +1,7 @@
 import {
-	defaultSpellbookState,
-	type SpellbookEntry,
-	type SpellbookState,
+	defaultGrimoireState,
+	type GrimoireEntry,
+	type GrimoireState,
 } from "./types.js";
 
 function asNonNegativeInteger(value: unknown): number {
@@ -11,7 +11,7 @@ function asNonNegativeInteger(value: unknown): number {
 	return Math.max(0, Math.floor(value));
 }
 
-function normalizeSpellbookEntry(value: unknown): SpellbookEntry | null {
+function normalizeGrimoireEntry(value: unknown): GrimoireEntry | null {
 	if (!value || typeof value !== "object") {
 		return null;
 	}
@@ -33,18 +33,18 @@ function normalizeSpellbookEntry(value: unknown): SpellbookEntry | null {
 	};
 }
 
-export function normalizeSpellbookState(value: unknown): SpellbookState {
+export function normalizeGrimoireState(value: unknown): GrimoireState {
 	if (!value || typeof value !== "object") {
-		return defaultSpellbookState;
+		return defaultGrimoireState;
 	}
 
 	const record = value as Record<string, unknown>;
 	if (!Array.isArray(record.entries)) {
-		return defaultSpellbookState;
+		return defaultGrimoireState;
 	}
 
 	const entries = record.entries
-		.map(normalizeSpellbookEntry)
-		.filter((entry): entry is SpellbookEntry => entry !== null);
+		.map(normalizeGrimoireEntry)
+		.filter((entry): entry is GrimoireEntry => entry !== null);
 	return { entries };
 }

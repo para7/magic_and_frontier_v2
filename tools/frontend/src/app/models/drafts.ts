@@ -10,7 +10,7 @@ export interface ItemDraft {
   customNbt: string;
 }
 
-export interface SpellbookDraft {
+export interface GrimoireDraft {
   id: string;
   castid: string;
   effectid: string;
@@ -34,7 +34,7 @@ export function createItemDraft(): ItemDraft {
   };
 }
 
-export function createSpellbookDraft(): SpellbookDraft {
+export function createGrimoireDraft(): GrimoireDraft {
   return {
     id: crypto.randomUUID(),
     castid: "0",

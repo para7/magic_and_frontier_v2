@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-export const saveSpellbookEntrySchema = v.object({
+export const saveGrimoireEntrySchema = v.object({
 	id: v.pipe(v.string(), v.trim(), v.minLength(1, "Entry id is required.")),
 	castid: v.pipe(
 		v.number(),

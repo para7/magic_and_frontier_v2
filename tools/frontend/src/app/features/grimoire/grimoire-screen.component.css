@@ -10,18 +10,18 @@
   gap: 8px;
 }
 
-.spellbook-table-wrap {
+.grimoire-table-wrap {
   overflow-x: auto;
 }
 
-.spellbook-table {
+.grimoire-table {
   border-collapse: collapse;
   margin-top: 14px;
   width: 100%;
 }
 
-.spellbook-table td,
-.spellbook-table th {
+.grimoire-table td,
+.grimoire-table th {
   border-bottom: 1px solid var(--line);
   padding: 10px 8px;
   text-align: left;
@@ -29,8 +29,8 @@
   white-space: nowrap;
 }
 
-.spellbook-table td:nth-child(6),
-.spellbook-table th:nth-child(6) {
+.grimoire-table td:nth-child(6),
+.grimoire-table th:nth-child(6) {
   max-width: 460px;
   overflow-wrap: anywhere;
   white-space: normal;

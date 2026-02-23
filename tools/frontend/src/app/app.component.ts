@@ -3,14 +3,14 @@ import { Component, inject, signal } from "@angular/core";
 import { api } from "./api";
 import { AppShellLayoutComponent } from "./layout/app-shell-layout.component";
 import { ItemScreenComponent } from "./features/item/item-screen.component";
-import { SpellbookScreenComponent } from "./features/spellbook/spellbook-screen.component";
+import { GrimoireScreenComponent } from "./features/grimoire/grimoire-screen.component";
 import { ToastService } from "./shared/toast.service";
 import type { AppScreen } from "./types";
 
 @Component({
   selector: "app-root",
   standalone: true,
-  imports: [CommonModule, AppShellLayoutComponent, ItemScreenComponent, SpellbookScreenComponent],
+  imports: [CommonModule, AppShellLayoutComponent, ItemScreenComponent, GrimoireScreenComponent],
   template: `
     <app-shell-layout
       [screen]="screen()"
@@ -18,7 +18,7 @@ import type { AppScreen } from "./types";
       (saveRequested)="requestSave()"
     >
       <app-item-screen *ngIf="screen() === 'item'" />
-      <app-spellbook-screen *ngIf="screen() === 'spellbook'" />
+      <app-grimoire-screen *ngIf="screen() === 'grimoire'" />
     </app-shell-layout>
   `
 })

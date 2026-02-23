@@ -2,13 +2,13 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import {
 	defaultItemState,
-	defaultSpellbookState,
+	defaultGrimoireState,
 	type ItemState,
 	type ItemStateRepository,
 	normalizeItemState,
-	normalizeSpellbookState,
-	type SpellbookState,
-	type SpellbookStateRepository,
+	normalizeGrimoireState,
+	type GrimoireState,
+	type GrimoireStateRepository,
 } from "@maf/domain";
 
 function isErrnoCode(error: unknown, code: string): boolean {
@@ -52,19 +52,19 @@ export function createItemStateRepository(
 	};
 }
 
-export function createSpellbookStateRepository(
-	spellbookStatePath: string,
-): SpellbookStateRepository {
+export function createGrimoireStateRepository(
+	grimoireStatePath: string,
+): GrimoireStateRepository {
 	return {
-		async loadSpellbookState(): Promise<SpellbookState> {
-			const value = await readJson(spellbookStatePath);
+		async loadGrimoireState(): Promise<GrimoireState> {
+			const value = await readJson(grimoireStatePath);
 			if (value == null) {
-				return defaultSpellbookState;
+				return defaultGrimoireState;
 			}
-			return normalizeSpellbookState(value);
+			return normalizeGrimoireState(value);
 		},
-		async saveSpellbookState(state: SpellbookState): Promise<void> {
-			await writeJson(spellbookStatePath, state);
+		async saveGrimoireState(state: GrimoireState): Promise<void> {
+			await writeJson(grimoireStatePath, state);
 		},
 	};
 }

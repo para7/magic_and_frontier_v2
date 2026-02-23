@@ -1,15 +1,15 @@
 import { describe, expect, test } from "vitest";
-import { createSpellbookUsecase, type SpellbookState } from "../src/index.js";
+import { createGrimoireUsecase, type GrimoireState } from "../src/index.js";
 
-function createMemoryRepository(initial: SpellbookState = { entries: [] }) {
+function createMemoryRepository(initial: GrimoireState = { entries: [] }) {
   let state = initial;
 
   return {
     repository: {
-      async loadSpellbookState() {
+      async loadGrimoireState() {
         return state;
       },
-      async saveSpellbookState(next: SpellbookState) {
+      async saveGrimoireState(next: GrimoireState) {
         state = next;
       }
     },
@@ -17,15 +17,15 @@ function createMemoryRepository(initial: SpellbookState = { entries: [] }) {
   };
 }
 
-describe("spellbook usecase", () => {
+describe("grimoire usecase", () => {
   test("creates an entry", async () => {
     const memory = createMemoryRepository();
-    const usecase = createSpellbookUsecase({
-      spellbookRepository: memory.repository,
+    const usecase = createGrimoireUsecase({
+      grimoireRepository: memory.repository,
       now: () => new Date("2026-02-21T00:00:00.000Z")
     });
 
-    const result = await usecase.saveSpellbookEntry({
+    const result = await usecase.saveGrimoireEntry({
       id: "entry-1",
       castid: 1,
       effectid: 10,
@@ -44,9 +44,9 @@ describe("spellbook usecase", () => {
 
   test("auto reassigns duplicated castid on save", async () => {
     const memory = createMemoryRepository();
-    const usecase = createSpellbookUsecase({ spellbookRepository: memory.repository });
+    const usecase = createGrimoireUsecase({ grimoireRepository: memory.repository });
 
-    await usecase.saveSpellbookEntry({
+    await usecase.saveGrimoireEntry({
       id: "entry-1",
       castid: 5,
       effectid: 1,
@@ -56,7 +56,7 @@ describe("spellbook usecase", () => {
       description: "A"
     });
 
-    const result = await usecase.saveSpellbookEntry({
+    const result = await usecase.saveGrimoireEntry({
       id: "entry-2",
       castid: 5,
       effectid: 2,

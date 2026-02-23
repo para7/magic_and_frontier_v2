@@ -1,55 +1,22 @@
-import { access } from "node:fs/promises";
-import type { ItemUsecase, SpellbookUsecase } from "@maf/domain";
+import type { ItemUsecase, GrimoireUsecase } from "@maf/domain";
 import { writeDatapackScaffold } from "./datapack-template.js";
 import { generateItemOutputs } from "./generators/item-generator.js";
-import { generateSpellbookOutputs } from "./generators/spellbook-generator.js";
+import { generateGrimoireOutputs } from "./generators/grimoire-generator.js";
 import { loadExportSettings } from "./settings.js";
 import type { SaveDataResponse } from "./types.js";
 
-async function ensureStateFileExists(
-	pathName: string,
-	errorCode: "MISSING_ITEM_STATE" | "MISSING_SPELLBOOK_STATE",
-): Promise<SaveDataResponse | null> {
-	try {
-		await access(pathName);
-		return null;
-	} catch {
-		return {
-			ok: false,
-			code: errorCode,
-			message: `Required state file is missing: ${pathName}`,
-		};
-	}
-}
-
 export async function exportDatapack(params: {
 	itemUsecase: ItemUsecase;
-	spellbookUsecase: SpellbookUsecase;
+	grimoireUsecase: GrimoireUsecase;
 	itemStatePath: string;
-	spellbookStatePath: string;
+	grimoireStatePath: string;
 	exportSettingsPath: string;
 }): Promise<SaveDataResponse> {
-	const missingItem = await ensureStateFileExists(
-		params.itemStatePath,
-		"MISSING_ITEM_STATE",
-	);
-	if (missingItem) {
-		return missingItem;
-	}
-
-	const missingSpellbook = await ensureStateFileExists(
-		params.spellbookStatePath,
-		"MISSING_SPELLBOOK_STATE",
-	);
-	if (missingSpellbook) {
-		return missingSpellbook;
-	}
-
 	try {
 		const settings = await loadExportSettings(params.exportSettingsPath);
-		const [itemState, spellbookState] = await Promise.all([
+		const [itemState, grimoireState] = await Promise.all([
 			params.itemUsecase.loadItems(),
-			params.spellbookUsecase.loadSpellbook(),
+			params.grimoireUsecase.loadGrimoire(),
 		]);
 
 		await writeDatapackScaffold(settings);
@@ -57,9 +24,9 @@ export async function exportDatapack(params: {
 			settings,
 			items: itemState.items,
 		});
-		const spellStats = await generateSpellbookOutputs({
+		const spellStats = await generateGrimoireOutputs({
 			settings,
-			entries: spellbookState.entries,
+			entries: grimoireState.entries,
 		});
 
 		const totalFiles =

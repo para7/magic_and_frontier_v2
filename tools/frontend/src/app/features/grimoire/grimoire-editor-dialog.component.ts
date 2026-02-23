@@ -6,20 +6,20 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from "@angular/materia
 import { MatFormFieldModule } from "@angular/material/form-field";
 import { MatInputModule } from "@angular/material/input";
 import { api } from "../../api";
-import { createSpellbookDraft } from "../../models/drafts";
-import { spellbookDraftToSaveInput, spellbookEntryToDraft } from "../../services/editor-mappers";
-import type { SaveErrorResult, SpellbookEntry } from "../../types";
+import { createGrimoireDraft } from "../../models/drafts";
+import { grimoireDraftToSaveInput, grimoireEntryToDraft } from "../../services/editor-mappers";
+import type { SaveErrorResult, GrimoireEntry } from "../../types";
 import { ToastService } from "../../shared/toast.service";
 
-export interface SpellbookEditorDialogData {
+export interface GrimoireEditorDialogData {
   mode: "create" | "edit" | "duplicate";
-  initial?: SpellbookEntry;
+  initial?: GrimoireEntry;
 }
 
 @Component({
-  selector: "app-spellbook-editor-dialog",
+  selector: "app-grimoire-editor-dialog",
   standalone: true,
-  styleUrl: "./spellbook-editor-dialog.component.css",
+  styleUrl: "./grimoire-editor-dialog.component.css",
   imports: [
     CommonModule,
     FormsModule,
@@ -31,7 +31,7 @@ export interface SpellbookEditorDialogData {
   template: `
     <h2 mat-dialog-title>{{ mode() === "edit" ? "エントリー編集" : "エントリー追加" }}</h2>
     <mat-dialog-content>
-      <form id="spellbook-editor-form" class="form-grid" (ngSubmit)="save()">
+      <form id="grimoire-editor-form" class="form-grid" (ngSubmit)="save()">
         <mat-form-field appearance="outline">
           <mat-label>castid</mat-label>
           <input matInput [(ngModel)]="draft().castid" name="castid" type="number" />
@@ -65,20 +65,20 @@ export interface SpellbookEditorDialogData {
     </mat-dialog-content>
     <mat-dialog-actions align="end">
       <button mat-button type="button" (click)="cancel()">キャンセル</button>
-      <button mat-flat-button type="submit" form="spellbook-editor-form">保存</button>
+      <button mat-flat-button type="submit" form="grimoire-editor-form">保存</button>
     </mat-dialog-actions>
   `
 })
-export class SpellbookEditorDialogComponent {
-  private readonly data = inject<SpellbookEditorDialogData>(MAT_DIALOG_DATA);
-  private readonly dialogRef = inject(MatDialogRef<SpellbookEditorDialogComponent>);
+export class GrimoireEditorDialogComponent {
+  private readonly data = inject<GrimoireEditorDialogData>(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject(MatDialogRef<GrimoireEditorDialogComponent>);
   private readonly toast = inject(ToastService);
 
   readonly mode = signal<"create" | "edit" | "duplicate">(this.data.mode);
   readonly draft = signal(
     this.data.initial
-      ? spellbookEntryToDraft(this.data.initial, this.data.mode === "duplicate")
-      : createSpellbookDraft()
+      ? grimoireEntryToDraft(this.data.initial, this.data.mode === "duplicate")
+      : createGrimoireDraft()
   );
 
   cancel(): void {
@@ -87,11 +87,11 @@ export class SpellbookEditorDialogComponent {
 
   async save(): Promise<void> {
     try {
-      await api.saveSpellbook(spellbookDraftToSaveInput(this.draft()));
+      await api.saveGrimoire(grimoireDraftToSaveInput(this.draft()));
       this.dialogRef.close("saved");
     } catch (error) {
       const result = error as SaveErrorResult;
-      this.toast.error(result.formError ?? "魔法書エントリーの保存に失敗しました。");
+      this.toast.error(result.formError ?? "grimoireエントリーの保存に失敗しました。");
     }
   }
 }

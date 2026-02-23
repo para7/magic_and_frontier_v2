@@ -1,22 +1,22 @@
-import { createItemUsecase, createSpellbookUsecase } from "@maf/domain";
+import { createItemUsecase, createGrimoireUsecase } from "@maf/domain";
 import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { loadServerConfig } from "./config.js";
 import { exportDatapack } from "./export/index.js";
 import {
 	createItemStateRepository,
-	createSpellbookStateRepository,
+	createGrimoireStateRepository,
 } from "./repositories/json-file-repositories.js";
 
 export function createApp() {
 	const config = loadServerConfig();
 	const itemRepository = createItemStateRepository(config.itemStatePath);
-	const spellbookRepository = createSpellbookStateRepository(
-		config.spellbookStatePath,
+	const grimoireRepository = createGrimoireStateRepository(
+		config.grimoireStatePath,
 	);
 
 	const itemUsecase = createItemUsecase({ itemRepository });
-	const spellbookUsecase = createSpellbookUsecase({ spellbookRepository });
+	const grimoireUsecase = createGrimoireUsecase({ grimoireRepository });
 
 	const app = new Hono();
 
@@ -48,29 +48,29 @@ export function createApp() {
 		return c.json(result, result.ok ? 200 : 404);
 	});
 
-	app.get("/api/spellbook", async (c) => {
-		const state = await spellbookUsecase.loadSpellbook();
+	app.get("/api/grimoire", async (c) => {
+		const state = await grimoireUsecase.loadGrimoire();
 		return c.json(state);
 	});
 
-	app.post("/api/spellbook", async (c) => {
+	app.post("/api/grimoire", async (c) => {
 		const body = await c.req.json();
-		const result = await spellbookUsecase.saveSpellbookEntry(body);
+		const result = await grimoireUsecase.saveGrimoireEntry(body);
 		return c.json(result, result.ok ? 200 : 400);
 	});
 
-	app.delete("/api/spellbook/:id", async (c) => {
+	app.delete("/api/grimoire/:id", async (c) => {
 		const id = c.req.param("id");
-		const result = await spellbookUsecase.deleteSpellbookEntry(id);
+		const result = await grimoireUsecase.deleteGrimoireEntry(id);
 		return c.json(result, result.ok ? 200 : 404);
 	});
 
 	app.post("/api/save", async (c) => {
 		const result = await exportDatapack({
 			itemUsecase,
-			spellbookUsecase,
+			grimoireUsecase,
 			itemStatePath: config.itemStatePath,
-			spellbookStatePath: config.spellbookStatePath,
+			grimoireStatePath: config.grimoireStatePath,
 			exportSettingsPath: config.exportSettingsPath,
 		});
 		return c.json(result, result.ok ? 200 : 400);

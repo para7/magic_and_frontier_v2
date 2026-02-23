@@ -18,7 +18,7 @@ function defaultExportSettingsPath(): string {
 export type ServerConfig = {
 	port: number;
 	itemStatePath: string;
-	spellbookStatePath: string;
+	grimoireStatePath: string;
 	allowedOrigin: string;
 	exportSettingsPath: string;
 };
@@ -29,9 +29,9 @@ export function loadServerConfig(): ServerConfig {
 		port: Number.isInteger(rawPort) ? rawPort : 8787,
 		itemStatePath:
 			process.env.ITEM_STATE_PATH ?? defaultStatePath("form-state.json"),
-		spellbookStatePath:
-			process.env.SPELLBOOK_STATE_PATH ??
-			defaultStatePath("spellbook-state.json"),
+		grimoireStatePath:
+			process.env.GRIMOIRE_STATE_PATH ??
+			defaultStatePath("grimoire-state.json"),
 		allowedOrigin: process.env.ALLOWED_ORIGIN ?? "http://localhost:4200",
 		exportSettingsPath:
 			process.env.EXPORT_SETTINGS_PATH ??

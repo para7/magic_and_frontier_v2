@@ -1,4 +1,4 @@
-export type SpellbookRecord = {
+export type GrimoireRecord = {
 	castid: number;
 	effectid: number;
 	cost: number;
@@ -7,20 +7,20 @@ export type SpellbookRecord = {
 	description: string;
 };
 
-export type SpellbookEntry = SpellbookRecord & {
+export type GrimoireEntry = GrimoireRecord & {
 	id: string;
 	updatedAt: string;
 };
 
-export type SpellbookState = {
-	entries: SpellbookEntry[];
+export type GrimoireState = {
+	entries: GrimoireEntry[];
 };
 
-export const defaultSpellbookState: SpellbookState = {
+export const defaultGrimoireState: GrimoireState = {
 	entries: [],
 };
 
-export type SpellbookFieldErrors = Partial<
+export type GrimoireFieldErrors = Partial<
 	Record<
 		"castid" | "effectid" | "cost" | "cast" | "title" | "description",
 		string
@@ -34,7 +34,7 @@ export type CastIdReassignment = {
 	to: number;
 };
 
-export type SaveSpellbookEntryInput = {
+export type SaveGrimoireEntryInput = {
 	id: string;
 	castid: number;
 	effectid: number;
@@ -44,20 +44,20 @@ export type SaveSpellbookEntryInput = {
 	description: string;
 };
 
-export type SaveSpellbookEntryResult =
+export type SaveGrimoireEntryResult =
 	| {
 			ok: true;
-			entry: SpellbookEntry;
+			entry: GrimoireEntry;
 			mode: "created" | "updated";
 			reassignments: CastIdReassignment[];
 	  }
 	| {
 			ok: false;
-			fieldErrors: SpellbookFieldErrors;
+			fieldErrors: GrimoireFieldErrors;
 			formError?: string;
 	  };
 
-export type DeleteSpellbookEntryResult =
+export type DeleteGrimoireEntryResult =
 	| {
 			ok: true;
 			deletedId: string;

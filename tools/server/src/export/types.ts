@@ -31,7 +31,7 @@ export type SaveDataResponse =
 			message: string;
 			code:
 				| "MISSING_ITEM_STATE"
-				| "MISSING_SPELLBOOK_STATE"
+				| "MISSING_GRIMOIRE_STATE"
 				| "INVALID_CONFIG"
 				| "EXPORT_FAILED";
 			details?: string;

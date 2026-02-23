@@ -1,5 +1,5 @@
-import type { ItemDraft, SpellbookDraft } from "../models/drafts";
-import type { ItemEntry, SpellbookEntry } from "../types";
+import type { ItemDraft, GrimoireDraft } from "../models/drafts";
+import type { ItemEntry, GrimoireEntry } from "../types";
 
 export function itemEntryToDraft(entry: ItemEntry): ItemDraft {
   return {
@@ -15,7 +15,7 @@ export function itemEntryToDraft(entry: ItemEntry): ItemDraft {
   };
 }
 
-export function spellbookEntryToDraft(entry: SpellbookEntry, duplicate = false): SpellbookDraft {
+export function grimoireEntryToDraft(entry: GrimoireEntry, duplicate = false): GrimoireDraft {
   return {
     id: duplicate ? crypto.randomUUID() : entry.id,
     castid: String(entry.castid),
@@ -51,7 +51,7 @@ export function itemDraftToSaveInput(draft: ItemDraft): {
   };
 }
 
-export function spellbookDraftToSaveInput(draft: SpellbookDraft): {
+export function grimoireDraftToSaveInput(draft: GrimoireDraft): {
   id: string;
   castid: number;
   effectid: number;
