@@ -95,3 +95,18 @@ p {
   padding-top: 9px;
   padding-bottom: 7px;
 }
+
+.app-toast-success .mdc-snackbar__surface {
+  background: #1e6446 !important;
+  color: #ebfff5 !important;
+}
+
+.app-toast-error .mdc-snackbar__surface {
+  background: #7b2f2f !important;
+  color: #ffecec !important;
+}
+
+.app-toast-info .mdc-snackbar__surface {
+  background: #22466d !important;
+  color: #edf5ff !important;
+}

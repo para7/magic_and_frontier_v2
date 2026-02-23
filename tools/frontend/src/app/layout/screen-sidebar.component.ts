@@ -28,10 +28,16 @@ import type { AppScreen } from "../types";
           魔法書DB
         </button>
       </nav>
+      <div class="sidebar-actions">
+        <button mat-flat-button class="save-button" (click)="save.emit()">
+          データ保存
+        </button>
+      </div>
     </aside>
   `
 })
 export class ScreenSidebarComponent {
   @Input({ required: true }) screen!: AppScreen;
   @Output() readonly switch = new EventEmitter<AppScreen>();
+  @Output() readonly save = new EventEmitter<void>();
 }

@@ -1,6 +1,7 @@
 import { hc } from "hono/client";
 import type { AppType } from "@maf/server/rpc";
 import type { ItemEntry, SpellbookEntry } from "./types";
+type SaveDataResponse = { ok: boolean; message: string };
 
 const API_BASE =
   (globalThis as { __MAF_API_BASE__?: string }).__MAF_API_BASE__ ?? "http://localhost:8787";
@@ -32,5 +33,8 @@ export const api = {
   },
   async deleteSpellbook(id: string): Promise<unknown> {
     return unwrap<unknown>(await client.api.spellbook[":id"].$delete({ param: { id } }));
+  },
+  async saveData(): Promise<SaveDataResponse> {
+    return unwrap<SaveDataResponse>(await client.api.save.$post());
   }
 };

@@ -16,6 +16,14 @@
   gap: 8px;
 }
 
+.sidebar-actions {
+  margin-top: auto;
+}
+
+.save-button {
+  width: 100%;
+}
+
 .sidebar-link {
   justify-content: flex-start;
   width: 100%;
@@ -38,7 +46,15 @@
     flex-wrap: wrap;
   }
 
+  .sidebar-actions {
+    margin-top: 8px;
+  }
+
   .sidebar-link {
+    width: auto;
+  }
+
+  .save-button {
     width: auto;
   }
 }

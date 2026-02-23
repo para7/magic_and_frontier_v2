@@ -15,7 +15,11 @@ import type { AppScreen } from "../types";
       </mat-toolbar>
 
       <div class="app-layout">
-        <app-screen-sidebar [screen]="screen" (switch)="screenChange.emit($event)" />
+        <app-screen-sidebar
+          [screen]="screen"
+          (switch)="screenChange.emit($event)"
+          (save)="saveRequested.emit()"
+        />
 
         <main class="container">
           <ng-content />
@@ -27,4 +31,5 @@ import type { AppScreen } from "../types";
 export class AppShellLayoutComponent {
   @Input({ required: true }) screen!: AppScreen;
   @Output() readonly screenChange = new EventEmitter<AppScreen>();
+  @Output() readonly saveRequested = new EventEmitter<void>();
 }
