@@ -2,7 +2,13 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 
 function defaultStatePath(fileName: string): string {
-	return path.resolve(process.cwd(), "../../savedata", fileName);
+	const candidates = [
+		path.resolve(process.cwd(), "savedata", fileName),
+		path.resolve(process.cwd(), "../savedata", fileName),
+		path.resolve(process.cwd(), "tools/savedata", fileName),
+	];
+	const existing = candidates.find((candidate) => existsSync(candidate));
+	return existing ?? candidates[0];
 }
 
 function defaultExportSettingsPath(): string {
