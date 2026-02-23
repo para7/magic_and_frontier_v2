@@ -5,9 +5,15 @@
   flex-direction: column;
   flex-shrink: 0;
   gap: 20px;
-  height: 100%;
+  height: calc(100dvh - 56px);
+  left: 0;
+  max-height: calc(100dvh - 56px);
+  overflow-y: auto;
   padding: 20px 14px;
+  position: fixed;
+  top: 56px;
   width: 220px;
+  z-index: 1000;
 }
 
 .sidebar-nav {
@@ -37,8 +43,15 @@
   .site-sidebar {
     border-bottom: 1px solid var(--line);
     border-right: none;
+    height: auto;
+    left: auto;
+    max-height: none;
+    overflow: visible;
     padding: 14px 12px;
+    position: static;
+    top: auto;
     width: 100%;
+    z-index: auto;
   }
 
   .sidebar-nav {

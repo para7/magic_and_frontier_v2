@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, signal } from "@angular/core";
+import { Component, computed, inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
@@ -25,6 +25,7 @@ import { EnemyEditorDialogComponent } from "./enemy-editor-dialog.component";
         <table class="list-table">
           <thead>
             <tr>
+              <th class="no-col">No.</th>
               <th>name</th>
               <th>hp</th>
               <th>dropTableId</th>
@@ -33,7 +34,8 @@ import { EnemyEditorDialogComponent } from "./enemy-editor-dialog.component";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let entry of entries()">
+            <tr *ngFor="let entry of pagedEntries(); let i = index">
+              <td class="no-col">{{ pageStartIndex() + i + 1 }}</td>
               <td>{{ entry.name }}</td>
               <td>{{ entry.hp }}</td>
               <td><code>{{ entry.dropTableId }}</code></td>
@@ -51,6 +53,21 @@ import { EnemyEditorDialogComponent } from "./enemy-editor-dialog.component";
           </tbody>
         </table>
       </div>
+
+      <div class="header-actions" *ngIf="totalPages() > 1">
+        <button mat-stroked-button type="button" (click)="prevPage()" [disabled]="currentPage() === 0">
+          前へ
+        </button>
+        <span>{{ currentPage() + 1 }} / {{ totalPages() }} ({{ entries().length }}件)</span>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="currentPage() >= totalPages() - 1"
+        >
+          次へ
+        </button>
+      </div>
     </mat-card>
   `
 })
@@ -59,8 +76,15 @@ export class EnemyScreenComponent {
   private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
 
+  readonly pageSize = 50;
   readonly entries = signal<EnemyEntry[]>([]);
   readonly enemySkillIndex = signal<Record<string, string>>({});
+  readonly currentPage = signal(0);
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.entries().length / this.pageSize)));
+  readonly pageStartIndex = computed(() => this.currentPage() * this.pageSize);
+  readonly pagedEntries = computed(() =>
+    this.entries().slice(this.pageStartIndex(), this.pageStartIndex() + this.pageSize)
+  );
 
   constructor() {
     void this.reloadAll();
@@ -74,9 +98,18 @@ export class EnemyScreenComponent {
     try {
       const state = await this.api.loadEnemies();
       this.entries.set(state.entries);
+      this.ensureValidPage();
     } catch {
       this.toast.error("enemyエントリー一覧の読み込みに失敗しました。");
     }
+  }
+
+  prevPage(): void {
+    this.currentPage.update((page) => Math.max(0, page - 1));
+  }
+
+  nextPage(): void {
+    this.currentPage.update((page) => Math.min(this.totalPages() - 1, page + 1));
   }
 
   async reloadEnemySkills(): Promise<void> {
@@ -140,6 +173,13 @@ export class EnemyScreenComponent {
       await this.reloadEntries();
     } catch {
       this.toast.error("enemyエントリーの削除に失敗しました。");
+    }
+  }
+
+  private ensureValidPage(): void {
+    const lastPage = this.totalPages() - 1;
+    if (this.currentPage() > lastPage) {
+      this.currentPage.set(lastPage);
     }
   }
 }

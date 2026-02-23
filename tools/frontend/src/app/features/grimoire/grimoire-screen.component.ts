@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, inject, signal } from "@angular/core";
+import { Component, computed, inject, signal } from "@angular/core";
 import { MatButtonModule } from "@angular/material/button";
 import { MatCardModule } from "@angular/material/card";
 import { MatDialog } from "@angular/material/dialog";
@@ -27,6 +27,7 @@ import type { GrimoireEntry } from "../../types";
         <table class="grimoire-table">
           <thead>
             <tr>
+              <th class="no-col">No.</th>
               <th>castid</th>
               <th>script</th>
               <th>詠唱設定</th>
@@ -36,7 +37,8 @@ import type { GrimoireEntry } from "../../types";
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let entry of entries()">
+            <tr *ngFor="let entry of pagedEntries(); let i = index">
+              <td class="no-col">{{ pageStartIndex() + i + 1 }}</td>
               <td>{{ entry.castid }}</td>
               <td>{{ entry.script }}</td>
               <td>
@@ -61,6 +63,21 @@ import type { GrimoireEntry } from "../../types";
           </tbody>
         </table>
       </div>
+
+      <div class="header-actions" *ngIf="totalPages() > 1">
+        <button mat-stroked-button type="button" (click)="prevPage()" [disabled]="currentPage() === 0">
+          前へ
+        </button>
+        <span>{{ currentPage() + 1 }} / {{ totalPages() }} ({{ entries().length }}件)</span>
+        <button
+          mat-stroked-button
+          type="button"
+          (click)="nextPage()"
+          [disabled]="currentPage() >= totalPages() - 1"
+        >
+          次へ
+        </button>
+      </div>
     </mat-card>
   `
 })
@@ -69,7 +86,14 @@ export class GrimoireScreenComponent {
   private readonly toast = inject(ToastService);
   private readonly api = inject(ApiService);
 
+  readonly pageSize = 50;
   readonly entries = signal<GrimoireEntry[]>([]);
+  readonly currentPage = signal(0);
+  readonly totalPages = computed(() => Math.max(1, Math.ceil(this.entries().length / this.pageSize)));
+  readonly pageStartIndex = computed(() => this.currentPage() * this.pageSize);
+  readonly pagedEntries = computed(() =>
+    this.entries().slice(this.pageStartIndex(), this.pageStartIndex() + this.pageSize)
+  );
 
   constructor() {
     void this.reloadEntries();
@@ -79,9 +103,18 @@ export class GrimoireScreenComponent {
     try {
       const grimoireState = await this.api.loadGrimoire();
       this.entries.set(grimoireState.entries);
+      this.ensureValidPage();
     } catch {
       this.toast.error("grimoireエントリー一覧の読み込みに失敗しました。");
     }
+  }
+
+  prevPage(): void {
+    this.currentPage.update((page) => Math.max(0, page - 1));
+  }
+
+  nextPage(): void {
+    this.currentPage.update((page) => Math.min(this.totalPages() - 1, page + 1));
   }
 
   async openCreateModal(): Promise<void> {
@@ -130,6 +163,13 @@ export class GrimoireScreenComponent {
       await this.reloadEntries();
     } catch {
       this.toast.error("grimoireエントリーの削除に失敗しました。");
+    }
+  }
+
+  private ensureValidPage(): void {
+    const lastPage = this.totalPages() - 1;
+    if (this.currentPage() > lastPage) {
+      this.currentPage.set(lastPage);
     }
   }
 }

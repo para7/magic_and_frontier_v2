@@ -23,8 +23,13 @@
   vertical-align: top;
 }
 
-.list-table td:nth-child(3),
-.list-table th:nth-child(3) {
+.list-table .no-col {
+  white-space: nowrap;
+  width: 56px;
+}
+
+.list-table td:nth-child(4),
+.list-table th:nth-child(4) {
   min-width: 280px;
 }
 

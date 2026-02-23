@@ -23,6 +23,11 @@
   vertical-align: top;
 }
 
+.list-table .no-col {
+  white-space: nowrap;
+  width: 56px;
+}
+
 .table-actions {
   display: flex;
   gap: 6px;

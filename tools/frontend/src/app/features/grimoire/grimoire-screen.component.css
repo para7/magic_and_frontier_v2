@@ -29,8 +29,13 @@
   white-space: nowrap;
 }
 
-.grimoire-table td:nth-child(5),
-.grimoire-table th:nth-child(5) {
+.grimoire-table .no-col {
+  white-space: nowrap;
+  width: 56px;
+}
+
+.grimoire-table td:nth-child(6),
+.grimoire-table th:nth-child(6) {
   max-width: 460px;
   overflow-wrap: anywhere;
   white-space: normal;
