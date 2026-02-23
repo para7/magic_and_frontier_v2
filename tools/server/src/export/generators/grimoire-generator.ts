@@ -20,7 +20,9 @@ function toSpellCustomData(entry: GrimoireEntry): string {
 }
 
 function toSpellLootTable(entry: GrimoireEntry): Record<string, unknown> {
-	const lore = linesToLoreValues(entry.description).map((line) => ({ text: line }));
+	const lore = linesToLoreValues(entry.description).map((line) => ({
+		text: line,
+	}));
 	return {
 		type: "minecraft:generic",
 		pools: [
@@ -55,7 +57,8 @@ function toSpellLootTable(entry: GrimoireEntry): Record<string, unknown> {
 
 function toSpellGiveCommand(entry: GrimoireEntry): string {
 	const loreParts = linesToLoreValues(entry.description).map(textComponent);
-	const loreValue = loreParts.length > 0 ? `,lore:[${loreParts.join(",")}]` : "";
+	const loreValue =
+		loreParts.length > 0 ? `,lore:[${loreParts.join(",")}]` : "";
 	const customName = `'${JSON.stringify({ text: entry.title }).replace(/'/g, "\\'")}'`;
 	return `give @s minecraft:written_book[custom_name=${customName}${loreValue},custom_data={${toSpellCustomData(entry)}}] 1`;
 }

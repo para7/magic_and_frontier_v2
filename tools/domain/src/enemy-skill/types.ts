@@ -1,4 +1,8 @@
-export type EnemySkillTrigger = "on_spawn" | "on_hit" | "on_low_hp" | "on_timer";
+export type EnemySkillTrigger =
+	| "on_spawn"
+	| "on_hit"
+	| "on_low_hp"
+	| "on_timer";
 
 export type EnemySkillEntry = {
 	id: string;

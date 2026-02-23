@@ -1,8 +1,8 @@
 import * as v from "valibot";
 import type {
+	EnemyStateRepository,
 	GrimoireStateRepository,
 	ItemStateRepository,
-	EnemyStateRepository,
 	TreasureStateRepository,
 } from "../shared/storage.js";
 import { saveTreasureSchema } from "./schema.js";
@@ -61,7 +61,9 @@ export function createTreasureUsecase(deps: {
 				deps.grimoireRepository.loadGrimoireState(),
 			]);
 			const itemIdSet = new Set(itemState.items.map((item) => item.id));
-			const grimoireIdSet = new Set(grimoireState.entries.map((entry) => entry.id));
+			const grimoireIdSet = new Set(
+				grimoireState.entries.map((entry) => entry.id),
+			);
 
 			for (const pool of parsed.output.lootPools) {
 				if (pool.kind === "item" && !itemIdSet.has(pool.refId)) {
@@ -124,7 +126,9 @@ export function createTreasureUsecase(deps: {
 			}
 
 			const state = await deps.treasureRepository.loadTreasureState();
-			const nextEntries = state.entries.filter((entry) => entry.id !== trimmedId);
+			const nextEntries = state.entries.filter(
+				(entry) => entry.id !== trimmedId,
+			);
 			if (nextEntries.length === state.entries.length) {
 				return { ok: false, formError: "Treasure not found." };
 			}

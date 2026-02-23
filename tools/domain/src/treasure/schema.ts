@@ -3,7 +3,11 @@ import * as v from "valibot";
 export const dropRefSchema = v.pipe(
 	v.object({
 		kind: v.picklist(["item", "grimoire"] as const),
-		refId: v.pipe(v.string(), v.trim(), v.minLength(1, "Reference id is required.")),
+		refId: v.pipe(
+			v.string(),
+			v.trim(),
+			v.minLength(1, "Reference id is required."),
+		),
 		weight: v.pipe(
 			v.number(),
 			v.integer("Weight must be an integer."),

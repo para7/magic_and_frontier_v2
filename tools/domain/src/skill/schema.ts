@@ -14,9 +14,5 @@ export const saveSkillSchema = v.object({
 		v.minLength(1, "Script is required."),
 		v.maxLength(20000, "Script must be 20000 characters or fewer."),
 	),
-	itemId: v.pipe(
-		v.string(),
-		v.trim(),
-		v.minLength(1, "Item id is required."),
-	),
+	itemId: v.pipe(v.string(), v.trim(), v.minLength(1, "Item id is required.")),
 });

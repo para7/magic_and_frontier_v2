@@ -119,6 +119,9 @@ importers:
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
+      vitest:
+        specifier: ^2.1.8
+        version: 2.1.9(@types/node@24.10.13)(less@4.2.2)(sass@1.85.0)(terser@5.39.0)
 
 packages:
 

@@ -33,7 +33,8 @@ function toFieldErrors(
 	if (nested.defense?.[0]) fieldErrors.defense = nested.defense[0];
 	if (nested.moveSpeed?.[0]) fieldErrors.moveSpeed = nested.moveSpeed[0];
 	if (nested.dropTableId?.[0]) fieldErrors.dropTableId = nested.dropTableId[0];
-	if (nested.enemySkillIds?.[0]) fieldErrors.enemySkillIds = nested.enemySkillIds[0];
+	if (nested.enemySkillIds?.[0])
+		fieldErrors.enemySkillIds = nested.enemySkillIds[0];
 	if (nested.spawnRule?.[0]) fieldErrors.spawnRule = nested.spawnRule[0];
 
 	return fieldErrors;
@@ -76,8 +77,11 @@ export function createEnemyUsecase(deps: {
 
 			const enemySkillIds = dedupeEnemySkillIds(parsed.output.enemySkillIds);
 
-			const enemySkillState = await deps.enemySkillRepository.loadEnemySkillState();
-			const enemySkillIdSet = new Set(enemySkillState.entries.map((entry) => entry.id));
+			const enemySkillState =
+				await deps.enemySkillRepository.loadEnemySkillState();
+			const enemySkillIdSet = new Set(
+				enemySkillState.entries.map((entry) => entry.id),
+			);
 			const missingEnemySkillId = enemySkillIds.find(
 				(id) => !enemySkillIdSet.has(id),
 			);
@@ -133,7 +137,9 @@ export function createEnemyUsecase(deps: {
 			}
 
 			const state = await deps.enemyRepository.loadEnemyState();
-			const nextEntries = state.entries.filter((entry) => entry.id !== trimmedId);
+			const nextEntries = state.entries.filter(
+				(entry) => entry.id !== trimmedId,
+			);
 			if (nextEntries.length === state.entries.length) {
 				return { ok: false, formError: "Enemy not found." };
 			}

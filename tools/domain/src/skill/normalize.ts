@@ -1,4 +1,8 @@
-import { defaultSkillState, type SkillEntry, type SkillState } from "./types.js";
+import {
+	defaultSkillState,
+	type SkillEntry,
+	type SkillState,
+} from "./types.js";
 
 function normalizeSkillEntry(value: unknown): SkillEntry | null {
 	if (!value || typeof value !== "object") {

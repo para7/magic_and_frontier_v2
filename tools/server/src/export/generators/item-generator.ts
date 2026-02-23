@@ -39,7 +39,10 @@ export async function generateItemOutputs(params: {
 	items: ItemEntry[];
 }): Promise<{ itemFunctions: number; itemLootTables: number }> {
 	const { settings, items } = params;
-	const functionRoot = path.join(settings.outputRoot, settings.paths.itemFunctionDir);
+	const functionRoot = path.join(
+		settings.outputRoot,
+		settings.paths.itemFunctionDir,
+	);
 	const lootRoot = path.join(settings.outputRoot, settings.paths.itemLootDir);
 
 	await mkdir(functionRoot, { recursive: true });
@@ -54,7 +57,11 @@ export async function generateItemOutputs(params: {
 			`loot give @s loot ${settings.namespace}:item/${item.id}`,
 		];
 		await writeFile(functionPath, `${lines.join("\n")}\n`, "utf-8");
-		await writeFile(lootPath, `${JSON.stringify(toItemLootTable(item), null, 2)}\n`, "utf-8");
+		await writeFile(
+			lootPath,
+			`${JSON.stringify(toItemLootTable(item), null, 2)}\n`,
+			"utf-8",
+		);
 	}
 
 	return {

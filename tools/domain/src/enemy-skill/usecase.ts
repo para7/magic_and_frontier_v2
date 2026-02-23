@@ -98,7 +98,9 @@ export function createEnemySkillUsecase(deps: {
 			}
 
 			const state = await deps.enemySkillRepository.loadEnemySkillState();
-			const nextEntries = state.entries.filter((entry) => entry.id !== trimmedId);
+			const nextEntries = state.entries.filter(
+				(entry) => entry.id !== trimmedId,
+			);
 			if (nextEntries.length === state.entries.length) {
 				return { ok: false, formError: "Enemy skill not found." };
 			}

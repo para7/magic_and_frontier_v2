@@ -22,7 +22,7 @@
     "lint": "biome check --write .",
     "format": "biome format --write .",
     "start": "node dist/index.js",
-    "test": "echo 'no tests'"
+    "test": "vitest run"
   },
   "dependencies": {
     "@hono/node-server": "^1.13.7",
@@ -31,6 +31,7 @@
   },
   "devDependencies": {
     "@types/node": "^24.3.0",
+    "vitest": "^2.1.8",
     "tsx": "^4.19.1",
     "typescript": "^5.9.2"
   }

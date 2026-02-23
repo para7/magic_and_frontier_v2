@@ -1,5 +1,8 @@
 import * as v from "valibot";
-import type { ItemStateRepository, SkillStateRepository } from "../shared/storage.js";
+import type {
+	ItemStateRepository,
+	SkillStateRepository,
+} from "../shared/storage.js";
 import { saveSkillSchema } from "./schema.js";
 import type {
 	DeleteSkillResult,
@@ -91,7 +94,9 @@ export function createSkillUsecase(deps: {
 			}
 
 			const state = await deps.skillRepository.loadSkillState();
-			const nextEntries = state.entries.filter((entry) => entry.id !== trimmedId);
+			const nextEntries = state.entries.filter(
+				(entry) => entry.id !== trimmedId,
+			);
 			if (nextEntries.length === state.entries.length) {
 				return { ok: false, formError: "Skill not found." };
 			}

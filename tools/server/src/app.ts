@@ -974,6 +974,10 @@ export function createApp() {
 		const result = await exportDatapack({
 			itemUsecase,
 			grimoireUsecase,
+			skillUsecase: skillRepository,
+			enemySkillUsecase: enemySkillRepository,
+			enemyUsecase: enemyRepository,
+			treasureUsecase: treasureRepository,
 			itemStatePath: config.itemStatePath,
 			grimoireStatePath: config.grimoireStatePath,
 			exportSettingsPath: config.exportSettingsPath,

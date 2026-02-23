@@ -1,4 +1,8 @@
-import { defaultEnemyState, type EnemyEntry, type EnemyState } from "./types.js";
+import {
+	defaultEnemyState,
+	type EnemyEntry,
+	type EnemyState,
+} from "./types.js";
 
 function asFiniteNumber(value: unknown, fallback = 0): number {
 	if (typeof value !== "number" || !Number.isFinite(value)) {
@@ -68,25 +72,25 @@ function normalizeEnemyEntry(value: unknown): EnemyEntry | null {
 		axisBoundsRecord === undefined
 			? undefined
 			: {
-				...(asOptionalFiniteNumber(axisBoundsRecord.xMin) === undefined
-					? {}
-					: { xMin: asOptionalFiniteNumber(axisBoundsRecord.xMin) }),
-				...(asOptionalFiniteNumber(axisBoundsRecord.xMax) === undefined
-					? {}
-					: { xMax: asOptionalFiniteNumber(axisBoundsRecord.xMax) }),
-				...(asOptionalFiniteNumber(axisBoundsRecord.yMin) === undefined
-					? {}
-					: { yMin: asOptionalFiniteNumber(axisBoundsRecord.yMin) }),
-				...(asOptionalFiniteNumber(axisBoundsRecord.yMax) === undefined
-					? {}
-					: { yMax: asOptionalFiniteNumber(axisBoundsRecord.yMax) }),
-				...(asOptionalFiniteNumber(axisBoundsRecord.zMin) === undefined
-					? {}
-					: { zMin: asOptionalFiniteNumber(axisBoundsRecord.zMin) }),
-				...(asOptionalFiniteNumber(axisBoundsRecord.zMax) === undefined
-					? {}
-					: { zMax: asOptionalFiniteNumber(axisBoundsRecord.zMax) }),
-			};
+					...(asOptionalFiniteNumber(axisBoundsRecord.xMin) === undefined
+						? {}
+						: { xMin: asOptionalFiniteNumber(axisBoundsRecord.xMin) }),
+					...(asOptionalFiniteNumber(axisBoundsRecord.xMax) === undefined
+						? {}
+						: { xMax: asOptionalFiniteNumber(axisBoundsRecord.xMax) }),
+					...(asOptionalFiniteNumber(axisBoundsRecord.yMin) === undefined
+						? {}
+						: { yMin: asOptionalFiniteNumber(axisBoundsRecord.yMin) }),
+					...(asOptionalFiniteNumber(axisBoundsRecord.yMax) === undefined
+						? {}
+						: { yMax: asOptionalFiniteNumber(axisBoundsRecord.yMax) }),
+					...(asOptionalFiniteNumber(axisBoundsRecord.zMin) === undefined
+						? {}
+						: { zMin: asOptionalFiniteNumber(axisBoundsRecord.zMin) }),
+					...(asOptionalFiniteNumber(axisBoundsRecord.zMax) === undefined
+						? {}
+						: { zMax: asOptionalFiniteNumber(axisBoundsRecord.zMax) }),
+				};
 
 	return {
 		id: id.length > 0 ? id : crypto.randomUUID(),
@@ -113,7 +117,9 @@ function normalizeEnemyEntry(value: unknown): EnemyEntry | null {
 				min: Math.max(0, asFiniteNumber(distanceRecord.min)),
 				max: Math.max(0, asFiniteNumber(distanceRecord.max)),
 			},
-			...(axisBounds && Object.keys(axisBounds).length > 0 ? { axisBounds } : {}),
+			...(axisBounds && Object.keys(axisBounds).length > 0
+				? { axisBounds }
+				: {}),
 		},
 		updatedAt: typeof record.updatedAt === "string" ? record.updatedAt : "",
 	};

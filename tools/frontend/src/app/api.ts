@@ -8,7 +8,7 @@ import type {
   SkillEntry,
   TreasureEntry
 } from "./types";
-type SaveDataResponse = { ok: boolean; message: string };
+interface SaveDataResponse { ok: boolean; message: string }
 
 const API_BASE =
   (globalThis as { __MAF_API_BASE__?: string }).__MAF_API_BASE__ ?? "http://localhost:8787";

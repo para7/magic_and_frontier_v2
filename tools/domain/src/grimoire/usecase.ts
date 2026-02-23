@@ -7,11 +7,11 @@ import { saveGrimoireEntrySchema } from "./schema.js";
 import type {
 	CastIdReassignment,
 	DeleteGrimoireEntryResult,
-	SaveGrimoireEntryInput,
-	SaveGrimoireEntryResult,
 	GrimoireEntry,
 	GrimoireFieldErrors,
 	GrimoireState,
+	SaveGrimoireEntryInput,
+	SaveGrimoireEntryResult,
 } from "./types.js";
 
 export interface GrimoireUsecase {
@@ -152,9 +152,7 @@ export function createGrimoireUsecase(deps: {
 				reassignments,
 			};
 		},
-		async deleteGrimoireEntry(
-			id: string,
-		): Promise<DeleteGrimoireEntryResult> {
+		async deleteGrimoireEntry(id: string): Promise<DeleteGrimoireEntryResult> {
 			const trimmedId = id.trim();
 			if (trimmedId.length === 0) {
 				return { ok: false, formError: "Missing entry id." };

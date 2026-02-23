@@ -1,6 +1,9 @@
 import * as v from "valibot";
 
-const finiteNumberSchema = v.pipe(v.number(), v.finite("Must be a finite number."));
+const finiteNumberSchema = v.pipe(
+	v.number(),
+	v.finite("Must be a finite number."),
+);
 
 const nonNegativeNumberSchema = v.pipe(
 	finiteNumberSchema,
@@ -98,7 +101,9 @@ export const saveEnemySchema = v.object({
 		v.minLength(1, "Drop table id is required."),
 	),
 	enemySkillIds: v.pipe(
-		v.array(v.pipe(v.string(), v.trim(), v.minLength(1, "Invalid enemy skill id."))),
+		v.array(
+			v.pipe(v.string(), v.trim(), v.minLength(1, "Invalid enemy skill id.")),
+		),
 	),
 	spawnRule: spawnRuleSchema,
 });
